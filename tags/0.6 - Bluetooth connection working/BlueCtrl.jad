@@ -1,8 +1,0 @@
-MIDlet-1: BlueCtrl, BlueCtrl.png, bluectrl.BlueCtrl
-MIDlet-Jar-Size: 134602
-MIDlet-Jar-URL: BlueCtrl.jar
-MIDlet-Name: BlueCtrl
-MIDlet-Vendor: Unknown
-MIDlet-Version: 1.0
-MicroEdition-Configuration: CLDC-1.1
-MicroEdition-Profile: MIDP-2.0
