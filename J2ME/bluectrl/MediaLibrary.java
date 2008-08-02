@@ -10,6 +10,7 @@ import org.kxml.parser.*;
 import org.kxml.kdom.*;
 import org.kxml.*;
 
+
 /**
  * Klasa odpowiedzialna za zaladowanie biblioteki muzycznej
  * @author Kuba Odias
@@ -57,10 +58,10 @@ public class MediaLibrary
 	/*******************************VARIABLES*************************************/
 	
 	/** Indeks wybranego utworu w bibliotece muzycznej */
-	private int mediaLibrarySelectedItem = 0;	/////-1
+	private int mediaLibrarySelectedItem;	/////-1
 	
 	/** Tablica przechowujaca informacje o utworach */
-	private static Hashtable mediaLibraryItems;
+	private Hashtable mediaLibraryItems;
 
 	/*****************************************************************************/
 	
@@ -72,6 +73,8 @@ public class MediaLibrary
 	
 	/** Wybrany zostal poprzedni element w bibliotece muzycznej */
 	private static final int PREVIOUS_ITEM=1;
+	
+	public static final String playlistFilename = "playlist.xml";
 
 	/*****************************************************************************/
 
@@ -84,11 +87,21 @@ public class MediaLibrary
 	 */
 	public MediaLibrary() {
 		mediaLibraryItems = new Hashtable();
+		mediaLibrarySelectedItem = 0;
 	}
 	
-	/** Metoda wczytujaca plik XML zawierajacy liste utworow a nastepnie parsuje ten plik
+	/** Akcesor zmiennej mediaLibrarySelectedItem
 	 * @author Kuba Odias
-	 * @version 0.2
+	 * @version 1.0
+	 * @return Wartosc zmiennej mediaLibrarySelectedItem
+	 */
+	public int getMediaLibrarySelectedItem() {
+		return mediaLibrarySelectedItem;
+	}
+	
+	/** Metoda parsePlaylist wczytuje plik XML zawierajacy liste utworow a nastepnie parsuje ten plik
+	 * @author Kuba Odias
+	 * @version 0.6
 	 */
 	public void parsePlaylist() {
 		XmlParser parser = null;
@@ -97,9 +110,9 @@ public class MediaLibrary
 		String title, artist, album;
 
 		try {
-			InputStream in = this.getClass().getResourceAsStream("/res/playlist.xml");
+			InputStream in = this.getClass().getResourceAsStream(playlistFilename);
 			InputStreamReader isr = new InputStreamReader(in);
-
+			
 			parser = new XmlParser( isr );
 			
 			// Pass the parser to the document. At this point the
@@ -119,8 +132,6 @@ public class MediaLibrary
 
 		// Now we get the root element which is "playlist"
 		Element root = doc.getRootElement();
-		
-		mediaLibraryItems = null;
 
 		int child_count = root.getChildCount();
 
@@ -171,17 +182,11 @@ public class MediaLibrary
 				item = null;
 			}
 			
-			// something went wrong
-			if (id == 0) {
-				System.out.println("ID of the track wasn't found in the XML file!");
-				return;
-			}
-			
 			Track track = new MediaLibrary.Track(length, title, artist, album);
 			Integer id_int = new Integer(id);
 			
 			// add new music track to the hashtable
-			//mediaLibraryItems.put(id_int, track);
+			mediaLibraryItems.put(id_int, track);
 			
 			kid = null;
 		}
@@ -193,17 +198,14 @@ public class MediaLibrary
 	 * @param item		NEXT_ITEM, lub PREVIOUS_ITEM
 	 * @return 		<code>true</code> jesli zmiana elementu powiodla sie, <code>false</code> w przeciwnym razie
 	 */
-	public boolean selectItemInMediaLibrary(int item)
-	{
-		if(item == PREVIOUS_ITEM)
-		{
+	public boolean selectItemInMediaLibrary(int item) {
+		if(item == PREVIOUS_ITEM) {
 			if(mediaLibrarySelectedItem == 0)	// wybrany jest juz pierwszy element na liscie
 				return false;
 			mediaLibrarySelectedItem--;
 			return true;
 		}
-		else if(item == NEXT_ITEM)
-		{
+		else if(item == NEXT_ITEM)	{
 			if(mediaLibrarySelectedItem == mediaLibraryItems.size() - 1)	// wybrany jest juz ostatni element na liscie
 				return false;
 			mediaLibrarySelectedItem++;
@@ -213,12 +215,18 @@ public class MediaLibrary
 		return false;	// aplikacja nie powinna sie tu znalezc
 	}
 	
-	/** Metoda ladujaca biblioteke muzyczna 
-	 * @author 			Kuba Odias
-	 * @version 		0.1
+	/** Metoda zwraca nazwe i wykonawce szukanego utworu
+	 * @author 		Kuba Odias
+	 * @version 		1.0
+	 * @param index	Indeks szukanego utworu na liscie
+	 * @return 		Nazwa utworu i wykonawcy
 	 */
-	private void loadMediaLibrary()
-	{
-		mediaLibrarySelectedItem = 0;
+	public String getItem(int index) {
+		if (index > mediaLibraryItems.size())
+			return null;
+		
+		Track track = (Track)mediaLibraryItems.get(new Integer(index));
+		
+		return (track.artist + "-" + track.title);
 	}
 }

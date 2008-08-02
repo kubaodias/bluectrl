@@ -137,11 +137,13 @@ public class BlueCtrl extends MIDlet implements CommandListener
         }
 		else if(cmd == mediaLibraryCommand)
 		{
+			mainCanvas.setDisplayedScreen(MainCanvas.MEDIA_LIBRARY_LOADING);
 			removeAllCommands(mainCanvas);
 			
 			mainCanvas.addCommand(backCommand);
 			mainCanvas.addCommand(exitCommand);
-			mainCanvas.setDisplayedScreen(MainCanvas.MEDIA_LIBRARY_SCREEN);
+			
+			mainCanvas.getBluetoothPlayer().getPlaylist();
 		}
 		else if(cmd == backCommand)
 		{
