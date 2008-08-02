@@ -86,6 +86,9 @@ public class XmlParser extends AbstractXmlParser {
     }       
 
 
+    public int getBufPos() {
+    	return bufPos;
+    }
     
     int readChar () throws IOException {
        int p = peekChar ();

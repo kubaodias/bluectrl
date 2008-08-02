@@ -105,12 +105,6 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener
 	/** Obiekt klasy MediaLibrary pozwalajacy na zaladowanie oraz obsluge biblioteki muzycznej */
 	private MediaLibrary mediaLibrary;
 	
-	/** Rozmiar biblioteki muzycznej pobieranej z komputera w bajtach */
-	private int mediaLibrarySize;
-	
-	/** Ilosc bajtow biblioteki muzycznej ktora zostala juz pobrana */
-	private int mediaLibraryDownloadedBytes;
-	
 	/*****************************************************************************/
 	
 	
@@ -375,7 +369,7 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener
 	 * @return		Wartosc zmiennej mediaLibraryDownloadedBytes
 	 */
 	public int getMediaLibraryDownloadedBytes() {
-		return mediaLibraryDownloadedBytes;
+		return mediaLibrary.getMediaLibraryDownloadedBytes();
 	}
 	
 	/** Akcesor zmiennej mediaLibrarySize
@@ -384,7 +378,7 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener
 	 * @return		Wartosc zmiennej mediaLibrarySizes
 	 */
 	public int getMediaLibrarySize() {
-		return mediaLibrarySize;
+		return mediaLibrary.getMediaLibrarySize();
 	}
 
 	/** Metoda dodaje nowa komende do wektora
@@ -1095,9 +1089,9 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener
 			}			
 		}
 		else if(msg.equals(COMMAND_GET_MEDIA_LIBRARY)) {
-			mediaLibrarySize = Integer.parseInt(bluetoothReceiveData());
-			downloadMediaLibrary();
-			mediaLibrary.parsePlaylist();
+			mediaLibrary.setMediaLibrarySize(Integer.parseInt(bluetoothReceiveData()));
+			//downloadMediaLibrary();
+			mediaLibrary.parsePlaylist(in);
 		}
 
 	}
@@ -1115,7 +1109,7 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener
 	/** Metoda pobiera zawartosc biblioteki muzycznej przez Bluetooth i zapisuje do pliku
 	 * @author Kuba Odias
 	 * @version 0.6
-	 */
+	 
 	private void downloadMediaLibrary() {
 		Connection c = null;
         OutputStream os = null;
@@ -1180,7 +1174,7 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener
             ex.printStackTrace();
         }
 	}
-	
+	*/
 
 	
 	/*****************************************************************************/
