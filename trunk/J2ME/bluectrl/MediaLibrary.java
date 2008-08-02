@@ -57,11 +57,17 @@ public class MediaLibrary
 	
 	/*******************************VARIABLES*************************************/
 	
+	/** Obiekt odpowiedzialny za parsowanie pliku XML otrzymanego przez Bluetooth */
+	private XmlParser xmlParser;
+	
 	/** Indeks wybranego utworu w bibliotece muzycznej */
 	private int mediaLibrarySelectedItem;	/////-1
 	
 	/** Tablica przechowujaca informacje o utworach */
 	private Hashtable mediaLibraryItems;
+	
+	/** Rozmiar biblioteki muzycznej pobieranej z komputera w bajtach */
+	private int mediaLibrarySize;
 
 	/*****************************************************************************/
 	
@@ -86,6 +92,7 @@ public class MediaLibrary
 	 * @version 1.0
 	 */
 	public MediaLibrary() {
+		xmlParser = null;
 		mediaLibraryItems = new Hashtable();
 		mediaLibrarySelectedItem = 0;
 	}
@@ -99,32 +106,61 @@ public class MediaLibrary
 		return mediaLibrarySelectedItem;
 	}
 	
+	
+	/** Metoda zwraca ilosc bajtow, ktora zostala przetworzona przez parser XML, w przyblizeniu ilosc bajtow pobrana przez Bluetooth
+	 * @author		Kuba Odias
+	 * @version	1.0
+	 * @return		Ilosc bajtow przetworzona przez parser XML
+	 */
+	public int getMediaLibraryDownloadedBytes() {
+		if (xmlParser != null)
+			return xmlParser.getBufPos();
+		
+		return 0;
+	}
+	
+	/** Akcesor zmiennej mediaLibrarySize
+	 * @author		Kuba Odias
+	 * @version	1.0
+	 * @return		Wartosc zmiennej mediaLibrarySizes
+	 */
+	public int getMediaLibrarySize() {
+		return mediaLibrarySize;
+	}
+	
+	/** Metoda ustawia wartosc zmiennej mediaLibrarySize
+	 * @author		Kuba Odias
+	 * @version	1.0
+	 * @param size	 Nowa wartosc zmiennej mediaLibrarySize
+	 */
+	public void setMediaLibrarySize(int size) {
+		mediaLibrarySize = size;
+	}
+	
 	/** Metoda parsePlaylist wczytuje plik XML zawierajacy liste utworow a nastepnie parsuje ten plik
 	 * @author Kuba Odias
 	 * @version 0.6
 	 */
-	public void parsePlaylist() {
-		XmlParser parser = null;
+	public void parsePlaylist(InputStream in) {
 		Document doc = new Document();
 		int id, length;
 		String title, artist, album;
 
 		try {
-			InputStream in = this.getClass().getResourceAsStream(playlistFilename);
 			InputStreamReader isr = new InputStreamReader(in);
 			
-			parser = new XmlParser( isr );
+			xmlParser = new XmlParser( isr );
 			
 			// Pass the parser to the document. At this point the
 			// entire resource is parsed and now resides in memory.
-			doc.parse( parser );
+			doc.parse( xmlParser );
 
-			parser = null;
+			xmlParser = null;
 		} 
 		catch (IOException ioe) {
 			ioe.printStackTrace();
 
-			parser = null;
+			xmlParser = null;
 			doc = null;
 			
 			return;
