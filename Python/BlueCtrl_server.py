@@ -7,10 +7,13 @@
 from bluetooth import *
 import time
 import commands
+import os
 import random
 
 class BlueCtrl:
 	"""Class used to manage BlueCtrl server"""
+	
+	playlist_file_name = "playlist.xml"
 
 	def __init__(self):
 		"""Constructor of the BlueCtrl class objects."""
@@ -154,6 +157,9 @@ class BlueCtrl:
 				commands.getstatusoutput('dcop amarok player volumeUp')
 			elif command == "COMMAND_VOLUME_DOWN":	
 				commands.getstatusoutput('dcop amarok player volumeDown')
+			elif command == "COMMAND_GET_MEDIA_LIBRARY":
+				self.parse_playlist()
+				self.bluetooth_send_command_with_data("COMMAND_GET_MEDIA_LIBRARY", "playlist")
 		except IOError:
 			print "IOError: wait_for_command"
 			self.bluetooth_send_acknowledge("ERROR")
@@ -217,6 +223,9 @@ class BlueCtrl:
 				return
 		elif data == "volume level":
 			data = self.volume_level
+		# send size of the playlist file
+		elif data == "playlist":	
+			data = str(os.stat(self.playlist_file_name)[6])
 
 		if data == "":
 			data = ' '
@@ -240,6 +249,9 @@ class BlueCtrl:
 			print "Sending data: ", data
 			self.client_sock.send(chr(len(data)))
 			length = self.client_sock.send(data)
+
+			if data == "playlist":
+				self.send_playlist()
 
 			if self.sleep_time > 0.2:
 				self.sleep_time = 0.2
@@ -373,9 +385,9 @@ class BlueCtrl:
 				print "IOError: parse_playlist - open file"
 				return
 
-			playlist_output_file = open("playlist.xml", "w")
+			playlist_output_file = open(self.playlist_file_name, "w")
 
-			i = 1
+			i = 0
 			for line in playlist_input_file:	# check each line in input file and write the most important lines to playlist.xml
 				if line.lstrip().startswith("<?xml") == True:		# beginning of a XML file
 					playlist_output_file.write(line.lstrip())
@@ -405,12 +417,34 @@ class BlueCtrl:
 		playlist_output_file.close()	
 
 
+	def send_playlist(self):
+		"""Send playlist over Bluetooth"""
+
+		try:
+			playlist_input_file = open(self.playlist_file_name, "r")
+		except IOError:
+			print "IOError: send_playlist - open file"
+			return
+
+		i = 0
+		size = os.stat(self.playlist_file_name)[6]
+
+		while i < size:
+			self.client_sock.send(playlist_input_file.read(1))
+			i = i + 1
+
+		print "Send " + i + " / " + size + " bytes of " + self.playlist.file_name
+		
+		# zamkniecie otwartego pliku
+		playlist_input_file.close()
+
+
 
 ##################################### MAIN PROGRAM ######################################
 
 if __name__ == '__main__':
 	blue_ctrl = BlueCtrl()	# create BlueCtrl object
-	blue_ctrl.parse_playlist()
+
 	i = 0
 	while True:
 		# set beginning state of the player
@@ -439,4 +473,3 @@ if __name__ == '__main__':
 		
 		print "Connection broken. Trying again in 3 seconds..."
 		time.sleep(3)
-
