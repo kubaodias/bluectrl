@@ -14,8 +14,11 @@ import javax.bluetooth.LocalDevice;
 import javax.bluetooth.RemoteDevice;
 import javax.bluetooth.ServiceRecord;
 import javax.bluetooth.UUID;
+import javax.microedition.io.Connection;
 import javax.microedition.io.Connector;
 import javax.microedition.io.StreamConnection;
+import javax.microedition.io.file.FileConnection;
+import javax.microedition.rms.RecordStore;
 
 
 /**
@@ -102,6 +105,12 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener
 	/** Obiekt klasy MediaLibrary pozwalajacy na zaladowanie oraz obsluge biblioteki muzycznej */
 	private MediaLibrary mediaLibrary;
 	
+	/** Rozmiar biblioteki muzycznej pobieranej z komputera w bajtach */
+	private int mediaLibrarySize;
+	
+	/** Ilosc bajtow biblioteki muzycznej ktora zostala juz pobrana */
+	private int mediaLibraryDownloadedBytes;
+	
 	/*****************************************************************************/
 	
 	
@@ -148,6 +157,9 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener
 	
 	/** Komenda wywolywana gdy zmienil sie tan odtwarzacza na komputerze - np. utwor zostal zapauzowany lub wznowiony */
 	public static final String COMMAND_CHANGE_STATE = "COMMAND_CHANGE_STATE";
+
+	/** Komenda wywolywana gdy uzytkownik chce pobrac biblioteke muzyczna */
+	public static final String COMMAND_GET_MEDIA_LIBRARY = "COMMAND_GET_MEDIA_LIBRARY";
 	
 	/*****************************************************************************/
 
@@ -167,8 +179,6 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener
 		sleepTime = 200;
 		bluetoothTimer = new BluetoothTimer();
 		mediaLibrary = new MediaLibrary();
-		
-		mediaLibrary.parsePlaylist();
 
 		new Thread(this).start();
 	}
@@ -357,6 +367,24 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener
 	public MediaLibrary getMediaLibrary()
 	{
 		return mediaLibrary;
+	}
+	
+	/** Akcesor zmiennej mediaLibraryDownloadedBytes
+	 * @author		Kuba Odias
+	 * @version	1.0
+	 * @return		Wartosc zmiennej mediaLibraryDownloadedBytes
+	 */
+	public int getMediaLibraryDownloadedBytes() {
+		return mediaLibraryDownloadedBytes;
+	}
+	
+	/** Akcesor zmiennej mediaLibrarySize
+	 * @author		Kuba Odias
+	 * @version	1.0
+	 * @return		Wartosc zmiennej mediaLibrarySizes
+	 */
+	public int getMediaLibrarySize() {
+		return mediaLibrarySize;
 	}
 
 	/** Metoda dodaje nowa komende do wektora
@@ -903,24 +931,19 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener
 	 * @author Kuba Odias
 	 * @version 0.9
 	 */
-	public void sendCommands()
-	{
-		while (!commandVector.isEmpty())
-		{
+	public void sendCommands() {
+		while (!commandVector.isEmpty()) {
 			String cmd = (String) commandVector.firstElement();	// pobiera najdawniej wywolana komende
 			
-			if(cmd != null)
-			{
+			if(cmd != null) {
 				commandVector.removeElementAt(0);	// usuwa pobrany element
-				if(bluetoothSendData(cmd) == false)		// i wysyla komende przez Bluetooth
-				{
-					commandVector.insertElementAt(cmd, 0);	// ponowne ustawienie elemntu do wyslania
+				if(bluetoothSendData(cmd) == false) {		// i wysyla komende przez Bluetooth
+					commandVector.insertElementAt(cmd, 0);	// ponowne ustawienie elementu do wyslania
 					return;		// ponowna proba wyslania danych nastapi po chwili
 				}
-				else
-				{
+				else {
 					// jesli uzytkownik wyslal ktorakolwiek z ponizszych komend to znaczy ze stan zostal zmieniony przez urzadzenie mobilne
-					if((cmd.equals(COMMAND_PLAY)) || (cmd.equals(COMMAND_PAUSE)) || (cmd.equals(COMMAND_NEXT)) || 
+					if ((cmd.equals(COMMAND_PLAY)) || (cmd.equals(COMMAND_PAUSE)) || (cmd.equals(COMMAND_NEXT)) || 
 							(cmd.equals(COMMAND_PREV)) || (cmd.equals(COMMAND_STOP)) || 
 								(cmd.equals(COMMAND_VOLUME_DOWN)) || (cmd.equals(COMMAND_VOLUME_UP)))
 						stateChangedByServer = false;
@@ -936,19 +959,15 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener
 	 * @author Kuba Odias
 	 * @version 0.7
 	 */
-	public void receiveCommands()
-	{
+	public void receiveCommands() {
 		String msg = null;
-		try 
-		{
-			while(in.available() != 0)		// jesli sa jakies dane do odebrania
-			{
+		try {
+			while(in.available() != 0) {		// jesli sa jakies dane do odebrania
 				msg = bluetoothReceiveData();
 				processReceivedCommand(msg);	// przetworzenie otrzymanej wiadomosci
 			}
 		} 
-		catch (IOException e1) 
-		{
+		catch (IOException e1) {
 			e1.printStackTrace();
 		}
 	}
@@ -957,8 +976,7 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener
 	 * @author Kuba Odias
 	 * @version 0.9
 	 */
-	public void play()
-	{
+	public void play() {
 		addCommandToProcess(BluetoothPlayer.COMMAND_PLAY);
 	}
 	
@@ -966,8 +984,7 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener
 	 * @author Kuba Odias
 	 * @version 0.9
 	 */
-	public void pause()
-	{
+	public void pause() {
 		addCommandToProcess(BluetoothPlayer.COMMAND_PAUSE);
 	}
 	
@@ -975,8 +992,7 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener
 	 * @author Kuba Odias
 	 * @version 0.9
 	 */
-	public void stop()
-	{
+	public void stop() {
 		addCommandToProcess(BluetoothPlayer.COMMAND_STOP);
 	}
 	
@@ -984,8 +1000,7 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener
 	 * @author Kuba Odias
 	 * @version 1.0
 	 */
-	public void volumeUp()
-	{
+	public void volumeUp() {
 		addCommandToProcess(BluetoothPlayer.COMMAND_VOLUME_UP);
 	}
 	
@@ -993,8 +1008,7 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener
 	 * @author Kuba Odias
 	 * @version 1.0
 	 */
-	public void volumeDown()
-	{
+	public void volumeDown() {
 		addCommandToProcess(BluetoothPlayer.COMMAND_VOLUME_DOWN);
 	}
 	
@@ -1004,51 +1018,44 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener
 	 * @version 0.5
 	 * @param msg	Otrzymana wiadomosc
 	 */
-	public void processReceivedCommand(String msg)
-	{
-		if(msg.equals(COMMAND_GET_TITLE))
-		{
+	public void processReceivedCommand(String msg) {
+		if(msg.equals(COMMAND_GET_TITLE)) {
 			title = bluetoothReceiveData();
+			
 			if(stateChangedByServer == true)
 				stateChanged = true;
 			
 			stateChangedByServer = true;
 		}
-		else if(msg.equals(COMMAND_GET_ARTIST))
-		{
+		else if(msg.equals(COMMAND_GET_ARTIST)) {
 			artist = bluetoothReceiveData();
 		}
-		else if(msg.equals(COMMAND_GET_TOTAL_TIME))
-		{
+		else if(msg.equals(COMMAND_GET_TOTAL_TIME)) {
 			String data = bluetoothReceiveData();
 			int index = data.indexOf(":");
+			
 			if(index == -1)
 				totalTime = 0;
-			else
-			{
+			else {
 				totalTime = 60*Integer.parseInt(data.substring(0, index));
 				totalTime += Integer.parseInt(data.substring(index + 1, data.length()));
 			}
 		}
-		else if(msg.equals(COMMAND_GET_CURRENT_TIME))
-		{
+		else if(msg.equals(COMMAND_GET_CURRENT_TIME)) {
 			int currentTime;
 			String currentTimeString = bluetoothReceiveData();
 			
 			int index = currentTimeString.indexOf(":");
-			if(index == -1)
-			{
+			if(index == -1) {
 					currentTime = 0;
 			}
-			else
-			{
+			else {
 				currentTime = 60*Integer.parseInt(currentTimeString.substring(0, index));
 				currentTime += Integer.parseInt(currentTimeString.substring(index + 1, currentTimeString.length()));
 			}
 			bluetoothTimer.setCurrentTime(currentTime);
 		}
-		else if(msg.equals(COMMAND_GET_VOLUME_LEVEL))
-		{
+		else if(msg.equals(COMMAND_GET_VOLUME_LEVEL)) {
 			volumeLevel = Integer.parseInt(bluetoothReceiveData());
 			
 			if(stateChangedByServer == true)
@@ -1056,16 +1063,13 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener
 			
 			stateChangedByServer = true;
 		}
-		else if(msg.equals(COMMAND_CHANGE_STATE))
-		{
+		else if(msg.equals(COMMAND_CHANGE_STATE)) {
 			playingState = bluetoothReceiveData();
 			
-			if(playingState.equals("PLAY"))
-			{
+			if(playingState.equals("PLAY")) {
 				int t;
 				
-				if((t = bluetoothTimer.getCurrentTime()) != -1)
-				{
+				if((t = bluetoothTimer.getCurrentTime()) != -1) {
 					if(bluetoothTimer.isRunning() == true)
 						bluetoothTimer.setCurrentTime(0);
 					else
@@ -1077,24 +1081,107 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener
 				if(bluetoothTimer.isRunning() == false)
 					bluetoothTimer.startTimer();
 			}
-			if(playingState.equals("OTHER"))
-			{				
+			if(playingState.equals("OTHER")) {				
 				bluetoothTimer.setCurrentTime(0);
 				
 				if(bluetoothTimer.isRunning() == false)
 					bluetoothTimer.startTimer();
 			}
-			else if(playingState.equals("PAUSE"))
-			{			
+			else if(playingState.equals("PAUSE")) {			
 				bluetoothTimer.pauseTimer();
 			}
-			else if(playingState.equals("STOP"))
-			{
+			else if(playingState.equals("STOP")) {
 				bluetoothTimer.stopTimer();
 			}			
 		}
+		else if(msg.equals(COMMAND_GET_MEDIA_LIBRARY)) {
+			mediaLibrarySize = Integer.parseInt(bluetoothReceiveData());
+			downloadMediaLibrary();
+			mediaLibrary.parsePlaylist();
+		}
 
 	}
+	
+	/** Metoda wywolujaca metode parsePlaylist z klasy MediaLibrary z dodatkowym argumentem - strumieniem z ktorego bedzie czytany plik
+	 * @author Kuba Odias
+	 * @version 0.6
+	 */
+	public void getPlaylist() {
+		if (isConnectedToServer == true) {
+			addCommandToProcess(BluetoothPlayer.COMMAND_GET_MEDIA_LIBRARY);
+		}
+	}
+	
+	/** Metoda pobiera zawartosc biblioteki muzycznej przez Bluetooth i zapisuje do pliku
+	 * @author Kuba Odias
+	 * @version 0.6
+	 */
+	private void downloadMediaLibrary() {
+		Connection c = null;
+        OutputStream os = null;
+        
+        try {
+            c = Connector.open("file:///" + mediaLibrary.playlistFilename, Connector.READ_WRITE);
+            FileConnection fc = (FileConnection)c;
+            if (!fc.exists())
+                fc.create();
+            else
+                fc.truncate(0);
+            os = fc.openOutputStream();
+        } 
+        catch (Exception e) {
+            return;
+        }
+        
+		try {
+			if (mediaLibrarySize <= 0) 
+	        {
+	        	bluetoothSendAcknowledge("ERROR");
+	        	return;
+	        }
+	        
+	        byte[] input = new byte[1];
+	        int ret;
+
+        	for (mediaLibraryDownloadedBytes = 0; mediaLibraryDownloadedBytes < mediaLibrarySize; 
+        		mediaLibraryDownloadedBytes++) {
+        		ret = in.read(input, mediaLibraryDownloadedBytes, 1);
+	            os.write(input);
+	            if (ret == -1) {
+		        	bluetoothSendAcknowledge("ERROR");
+		        	closeConnection();
+		        	return;
+		        }
+        	}       
+        
+	        os.flush();
+	        
+	        bluetoothSendAcknowledge("ACK");
+	        
+	        if (sleepTime > 100)
+				sleepTime=100;
+			else if(sleepTime > 20)
+				sleepTime-=10;
+		} 
+		catch (IOException e) 
+		{
+			bluetoothSendAcknowledge("ERROR");
+			closeConnection();
+			return;
+		}
+		
+		try {
+            if (os != null)
+                os.close();
+            if (c != null)
+                c.close();
+        } 
+		catch (Exception ex) {
+            ex.printStackTrace();
+        }
+	}
+	
+
 	
 	/*****************************************************************************/
 

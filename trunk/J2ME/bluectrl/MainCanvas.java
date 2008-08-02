@@ -81,11 +81,11 @@ public class MainCanvas extends GameCanvas implements Runnable
 	/** Polozenie przyciskow zmieniajace sie podczas wykrycia serwera */
 	private int buttonsLocation;
 	
-	private int textPos0, textPos1;
+	private int textPos0, textPos1, mediaLibraryTextPos;
 	
-	private int waitTimeText0, waitTimeText1;
+	private int waitTimeText0, waitTimeText1, mediaLibraryWaitTimeText;
 	
-	private String lastText0, lastText1;
+	private String lastText0, lastText1, mediaLibraryLastText;
 	
 	/*****************************************************************************/
 	
@@ -97,6 +97,9 @@ public class MainCanvas extends GameCanvas implements Runnable
 	
 	/** Wyswietlany jest ekran biblioteki muzycznej */
 	public static final int MEDIA_LIBRARY_SCREEN = 1;
+	
+	/** Wyswietlany jest ekran ladowania biblioteki muzycznej */
+	public static final int MEDIA_LIBRARY_LOADING = 2;
 	
 	/** Indeks ikony 'Play' we wczytanym obrazku z ikonami */
 	private static final int PLAY_ICON = 0;
@@ -155,6 +158,7 @@ public class MainCanvas extends GameCanvas implements Runnable
     	screenHeight = getHeight();
     	fontHeight = Font.getDefaultFont().getHeight();
     	
+    	mediaLibrarySelectedItemOnScreen = 0;
     	mediaLibraryItemsNumberOnScreen = (screenHeight - 16) / (fontHeight + 5);
     	
     	buttonsLocation = 70;
@@ -171,8 +175,7 @@ public class MainCanvas extends GameCanvas implements Runnable
 	 * @version 1.0
      * @param d		Nowa wartosc zmiennej displayedScreen
      */
-    public void setDisplayedScreen(int d)
-    {
+    public void setDisplayedScreen(int d) {
     	displayedScreen = d;
     }
     
@@ -181,19 +184,25 @@ public class MainCanvas extends GameCanvas implements Runnable
 	 * @version 1.0
      * @return	Wartosc zmiennej displayedScreen
      */
-    public int getDisplayedScreen()
-    {
+    public int getDisplayedScreen() {
     	return displayedScreen;
+    }
+    
+    /** Metoda pobierajaca referencje do obiektu klasy BluetoothPlayer
+     * @author 	Kuba Odias
+	 * @version 	1.0
+     * @return		Referencja do obiektu klasy BluetoothPlayer
+     */
+    public BluetoothPlayer getBluetoothPlayer() {
+    	return bluetoothPlayer;
     }
     
     /** Metoda odpowiedzialna za wyswietlenie i animacje trojwymiarowego logo 
      * @author Kuba Odias
 	 * @version 1.0
 	 */
-    public void displayLogo()
-    {
-    	try
-    	{
+    public void displayLogo() {
+    	try {
 	    	int keys;
 	    	int frames = 0;
 	    	float angle = 10.0f;	// kat o jaki obraca sie logo w animacji
@@ -220,8 +229,7 @@ public class MainCanvas extends GameCanvas implements Runnable
 	        
 	        keys = getKeyStates();
 	
-	        while(((keys & FIRE_PRESSED) == 0) && (frames < 36))	// oczekiwanie na nacisniecie klawisza
-	        {
+	        while(((keys & FIRE_PRESSED) == 0) && (frames < 36)) {	// oczekiwanie na nacisniecie klawisza
 	        	g3d.bindTarget(g);
 	
 	        	scene.getChild(0).preRotate(angle, 0.0f, 0.7f, 1.0f);
@@ -245,20 +253,17 @@ public class MainCanvas extends GameCanvas implements Runnable
 	        if((keys & FIRE_PRESSED) == 0)	// jesli przycisk nie zostal wcisniety, tylko animacja dobiegla konca
 	        	Thread.sleep(1000);
     	}
-    	catch (InterruptedException e) 
-		{
+    	catch (InterruptedException e) {
     		soundPlayer.play(SoundPlayer.ERROR_SOUND);
     		System.out.println("Praca watku przerysowujacego zawartosc ekranu zostala przerwana!");
 			e.printStackTrace();
 		}
-    	catch (IOException e) 
-		{
+    	catch (IOException e) {
     		soundPlayer.play(SoundPlayer.ERROR_SOUND);
     		System.out.println("Blad podczas wczytywania pliku z zasobow!");
 			e.printStackTrace();
 		}
-    	catch(Exception e)
-    	{
+    	catch(Exception e) {
     		soundPlayer.play(SoundPlayer.ERROR_SOUND);
     		System.out.println("Nieznany wyjatek");
     		e.printStackTrace();
@@ -271,8 +276,7 @@ public class MainCanvas extends GameCanvas implements Runnable
 	 * @version 0.7
 	 * @throws IOException
 	 */
-    public void loadResources() throws IOException
-    {
+    public void loadResources() throws IOException {
     	int i, j;
     	
     	Image image = Image.createImage ("/res/layer.png");	// wczytanie obrazku tla
@@ -287,8 +291,7 @@ public class MainCanvas extends GameCanvas implements Runnable
         for(i = 0; i < cols - 2; i++)
         	backgroundLayer.setCell(i+1, 0, 2);
         backgroundLayer.setCell(cols - 1, 0, 1);
-        for(i = 1; i < rows - 1; i++)
-        {
+        for(i = 1; i < rows - 1; i++) {
         	backgroundLayer.setCell(0, i, 4);
         	backgroundLayer.setCell(cols - 1, i, 8);
         }
@@ -310,36 +313,27 @@ public class MainCanvas extends GameCanvas implements Runnable
         previousSprite = new Sprite(iconsImage, 32, 32);
         previousSprite.setFrame(PREVIOUS_ICON);	// ustawienie sprite'a tak, aby wyswietlal ikone 'Previous'
         bluetoothLogoSmallSprite = new Sprite(logoImage, 8, 14);
-        
-        
     }
     
     /** Metoda odpowiedzialna za czyszczenie pozostalosci po aplikacji 
      * @author Kuba Odias
 	 * @version 0.1
 	 */
-    public void destroy() 
-    {
+    public void destroy() {
     	bluetoothPlayer.closeConnection();
     	scene = null;
-    	
-    	//if(getGameObject() != null)
-		//	getGameObject().destroy();
-    	
     }
     
     /** Metoda uruchamiana przez watek, odpowiedzialna za przerysowywanie ekranu 
      * @author Kuba Odias
 	 * @version 1.0
 	 */
-	public void run() 
-	{
+	public void run() {
 		displayLogo();
 		
 		//setFullScreenMode(false);
 		
-		while(true)
-		{		
+		while(true) {		
 			updateState();	// sprawdzenie stanu przyciskow 
 			updateScreen();	// wyswietlenie nowej zawartosci ekranu
 	        
@@ -353,12 +347,10 @@ public class MainCanvas extends GameCanvas implements Runnable
 				bluetoothPlayer.setBluetoothError(false);
 			}
 			*/
-			try
-			{
+			try {
 				Thread.sleep(50);
 			}
-			catch(InterruptedException e) 
-			{
+			catch(InterruptedException e) {
 				soundPlayer.play(SoundPlayer.ERROR_SOUND);
 				System.out.println("Praca watku przerysowujacego zawartosc ekranu zostala przerwana!");
 			}
@@ -370,22 +362,17 @@ public class MainCanvas extends GameCanvas implements Runnable
 	 * @author Kuba Odias
 	 * @version 0.6
 	 */
-	public void updateState()
-	{
+	public void updateState()	{
 		int keys = getKeyStates();
 		
-		if(bluetoothPlayer.getIsConnectedToServer() == true)
-		{
-			if(displayedScreen == PLAYER_SCREEN)	// jesli wyswietlany jest ekran odtwarzacz
-			{
-				if(((keys & FIRE_PRESSED) != 0) && (nextPressed == false) && (previousPressed == false))	// jesli przycisk 'Play / Pause' jest wcisniety, a pozostale nie sa wcisniete
-				{
-					if(playPauseSprite.getFrame() == PLAY_ICON)	
-					{
+		if(bluetoothPlayer.getIsConnectedToServer() == true) {
+			if(displayedScreen == PLAYER_SCREEN) {	// jesli wyswietlany jest ekran odtwarzacza
+				// jesli przycisk 'Play / Pause' jest wcisniety, a pozostale nie sa wcisniete	
+				if(((keys & FIRE_PRESSED) != 0) && (nextPressed == false) && (previousPressed == false))	{
+					if(playPauseSprite.getFrame() == PLAY_ICON)	{
 						playPauseSprite.setFrame(PLAY_ICON_PRESSED);
 					}
-					else if(playPauseSprite.getFrame() == PAUSE_ICON)
-					{			
+					else if(playPauseSprite.getFrame() == PAUSE_ICON) {			
 						playPauseSprite.setFrame(PAUSE_ICON_PRESSED);
 					}
 					
@@ -394,29 +381,26 @@ public class MainCanvas extends GameCanvas implements Runnable
 					
 					firePressed = true;
 				}
-				else if(((keys & FIRE_PRESSED) == 0) && (firePressed == true)) // przycisk zostal zwolniony
-				{
-					if(playPauseSprite.getFrame() == PLAY_ICON_PRESSED)	// zmiana stanu przycisku
-					{
+				// przycisk zostal zwolniony
+				else if(((keys & FIRE_PRESSED) == 0) && (firePressed == true)) { 
+					if(playPauseSprite.getFrame() == PLAY_ICON_PRESSED) {	// zmiana stanu przycisku
 						bluetoothPlayer.play();
 						playPauseSprite.setFrame(PAUSE_ICON);
 						
 					}
-					else if(playPauseSprite.getFrame() == PAUSE_ICON_PRESSED)
-					{
+					else if(playPauseSprite.getFrame() == PAUSE_ICON_PRESSED) {
 						bluetoothPlayer.pause();
 						playPauseSprite.setFrame(PLAY_ICON);
 					}
 					
 					firePressed = false;			
 				}
-				if(((keys & RIGHT_PRESSED) != 0) && (firePressed == false) && (previousPressed == false))	// jesli przycisk 'Next' jest wcisniety, a pozostale nie sa wcisniete
-				{
+				// jesli przycisk 'Next' jest wcisniety, a pozostale nie sa wcisniete
+				if(((keys & RIGHT_PRESSED) != 0) && (firePressed == false) && (previousPressed == false)) {	
 					if(nextSprite.getFrame() == NEXT_ICON)	
 						nextSprite.setFrame(NEXT_ICON_PRESSED);
 					
-					if(nextPressed == false)
-					{
+					if(nextPressed == false) {
 						soundPlayer.play(SoundPlayer.CLICK_SOUND);
 					}
 					
@@ -478,46 +462,46 @@ public class MainCanvas extends GameCanvas implements Runnable
 					bluetoothPlayer.volumeDown();
 				}
 			}
-			else if(displayedScreen == MEDIA_LIBRARY_SCREEN)	// jesli wyswietlany jest ekran biblioteki muzycznej
+		}
+		if(displayedScreen == MEDIA_LIBRARY_SCREEN)	// jesli wyswietlany jest ekran biblioteki muzycznej
+		{
+			if(((keys & FIRE_PRESSED) != 0) && (nextPressed == false) && (previousPressed == false))	// jesli przycisk 'Play / Pause' jest wcisniety, a pozostale nie sa wcisniete
 			{
-				if(((keys & FIRE_PRESSED) != 0) && (nextPressed == false) && (previousPressed == false))	// jesli przycisk 'Play / Pause' jest wcisniety, a pozostale nie sa wcisniete
+				if(firePressed == false)
+					soundPlayer.play(SoundPlayer.CLICK_SOUND);
+				firePressed = true;
+			}
+			else if(((keys & FIRE_PRESSED) == 0) && (firePressed == true)) // przycisk zostal zwolniony
+			{
+				firePressed = false;			
+			}
+			if(((keys & DOWN_PRESSED) != 0) && (firePressed == false) && (previousPressed == false))	// jesli przycisk 'Next' jest wcisniety, a pozostale nie sa wcisniete
+			{
+				nextPressed = true;
+			}
+			else if(((keys & DOWN_PRESSED) == 0) && (nextPressed == true)) // przycisk zostal zwolniony
+			{
+				if(bluetoothPlayer.getMediaLibrary().selectItemInMediaLibrary(NEXT_ITEM) == true)	// jesli wybrany utwor nie byl ostatni na liscie
 				{
-					if(firePressed == false)
-						soundPlayer.play(SoundPlayer.CLICK_SOUND);
-					firePressed = true;
+					if(mediaLibrarySelectedItemOnScreen < mediaLibraryItemsNumberOnScreen - 1)	
+						mediaLibrarySelectedItemOnScreen++;
 				}
-				else if(((keys & FIRE_PRESSED) == 0) && (firePressed == true)) // przycisk zostal zwolniony
+				nextPressed = false;
+			}
+			
+			if(((keys & UP_PRESSED) != 0) && (nextPressed == false) && (firePressed == false))	// jesli przycisk 'Previous' jest wcisniety, a pozostale nie sa wcisniete
+			{
+				previousPressed = true;
+			}
+			else if(((keys & UP_PRESSED) == 0) && (previousPressed == true)) // przycisk zostal zwolniony
+			{
+				if(bluetoothPlayer.getMediaLibrary().selectItemInMediaLibrary(PREVIOUS_ITEM) == true)	// jesli wybrany utwor nie byl pierwszy na liscie
 				{
-					firePressed = false;			
-				}
-				if(((keys & DOWN_PRESSED) != 0) && (firePressed == false) && (previousPressed == false))	// jesli przycisk 'Next' jest wcisniety, a pozostale nie sa wcisniete
-				{
-					nextPressed = true;
-				}
-				else if(((keys & DOWN_PRESSED) == 0) && (nextPressed == true)) // przycisk zostal zwolniony
-				{
-					if(bluetoothPlayer.getMediaLibrary().selectItemInMediaLibrary(NEXT_ITEM) == true)	// jesli wybrany utwor nie byl ostatni na liscie
-					{
-						if(mediaLibrarySelectedItemOnScreen < mediaLibraryItemsNumberOnScreen - 1)	
-							mediaLibrarySelectedItemOnScreen++;
-					}
-					nextPressed = false;
+					if(mediaLibrarySelectedItemOnScreen > 0)	
+						mediaLibrarySelectedItemOnScreen--;
 				}
 				
-				if(((keys & UP_PRESSED) != 0) && (nextPressed == false) && (firePressed == false))	// jesli przycisk 'Previous' jest wcisniety, a pozostale nie sa wcisniete
-				{
-					previousPressed = true;
-				}
-				else if(((keys & UP_PRESSED) == 0) && (previousPressed == true)) // przycisk zostal zwolniony
-				{
-					if(bluetoothPlayer.getMediaLibrary().selectItemInMediaLibrary(PREVIOUS_ITEM) == true)	// jesli wybrany utwor nie byl pierwszy na liscie
-					{
-						if(mediaLibrarySelectedItemOnScreen > 0)	
-							mediaLibrarySelectedItemOnScreen--;
-					}
-					
-					previousPressed = false;
-				}
+				previousPressed = false;
 			}
 		}
 		
@@ -561,13 +545,10 @@ public class MainCanvas extends GameCanvas implements Runnable
 	 * @author Kuba Odias
 	 * @version 0.4
 	 */
-	public void updateScreen()
-	{
+	public void updateScreen() {
 		Graphics g = getGraphics();
-		if(displayedScreen == PLAYER_SCREEN)
-		{
-			if(backgroundLayer != null)
-			{
+		if(displayedScreen == PLAYER_SCREEN) {
+			if(backgroundLayer != null) {
 				backgroundLayer.paint(g);
 			}
 			
@@ -575,42 +556,34 @@ public class MainCanvas extends GameCanvas implements Runnable
 					drawText(g, "Connecting...", 0);
 			else if(bluetoothPlayer.getBluetoothError() == true)
 					drawText(g, "Disconnected", 0);
-			else
-			{
-				if(bluetoothPlayer.getTitle() != null)
-				{
+			else {
+				if(bluetoothPlayer.getTitle() != null) {
 					drawText(g, bluetoothPlayer.getTitle(), 0);
 				}
-				if(bluetoothPlayer.getArtist() != null)
-				{
+				if(bluetoothPlayer.getArtist() != null) {
 					drawText(g, bluetoothPlayer.getArtist(), 1);
 				}
 				
-				if(showVolume > 0)
-				{
+				if(showVolume > 0) {
 					showVolume--;
 					
 					drawText(g, "      Volume: " + volumeLevel + "%", 2);
 				}
 			}
 				
-			if(bluetoothPlayer.isBluetoothOn())
-			{
-				if(bluetoothPlayer.getInquiryStarted())
-				{
+			if(bluetoothPlayer.isBluetoothOn()) {
+				if(bluetoothPlayer.getInquiryStarted()) {
 					showInquiryProgress(g, inquiryProgress+=20);
 					if(inquiryProgress >= 360)
 						inquiryProgress = 0;
 				}
-				else
-				{
+				else {
 					inquiryProgress = 0;
 					showInquiryProgress(g, 0);
 				}
 					
 			}
-			else
-			{
+			else {
 				drawText(g, "Please turn your Bluetooth device on", 1);
 			}
 
@@ -627,10 +600,31 @@ public class MainCanvas extends GameCanvas implements Runnable
 			else
 				showProgressBar(g, 0, 100);
 		}
-		else if(displayedScreen == MEDIA_LIBRARY_SCREEN)
-		{
-			if(backgroundLayer != null)
-			{
+		else if(displayedScreen == MEDIA_LIBRARY_LOADING) {
+			if(backgroundLayer != null) {
+				backgroundLayer.paint(g);
+			}
+			
+			if (bluetoothPlayer.getIsConnectedToServer() == true) {
+				drawText(g, "Loading media library", 0);
+				drawText(g, "Please wait...", 1);
+				drawText(g, bluetoothPlayer.getMediaLibraryDownloadedBytes() + "/" + bluetoothPlayer.getMediaLibrarySize() + " bytes", 2);
+				
+				int size = bluetoothPlayer.getMediaLibrarySize();
+				if (size == 0)	// to avoid dividing by zero
+					size = 1;
+				
+				showProgressBar(g, bluetoothPlayer.getMediaLibraryDownloadedBytes(), size);
+				
+				// if 100% of the playlist file was downloaded
+				if (((bluetoothPlayer.getMediaLibraryDownloadedBytes() * 100) / size) == 100)
+					setDisplayedScreen(MainCanvas.MEDIA_LIBRARY_SCREEN);
+			}
+			else 
+				drawText(g, "You're not connected", 0);
+		}
+		else if(displayedScreen == MEDIA_LIBRARY_SCREEN) {
+			if(backgroundLayer != null) {
 				backgroundLayer.paint(g);
 			}
 			
@@ -758,7 +752,7 @@ public class MainCanvas extends GameCanvas implements Runnable
 			}
 			
 			g.setColor(255, 255, 255);	// biala czcionka
-			g.drawString(textTmp, 16/* - Font.getDefaultFont().charWidth(textTmp.charAt(0))*/, 16 + line*(fontHeight + 3), Graphics.TOP | Graphics.LEFT);
+			g.drawString(textTmp, 16, 16 + line*(fontHeight + 3), Graphics.TOP | Graphics.LEFT);
 			
 			g.setColor(BACKGROUND_COLOR);	// zamazanie tekstu po bokach
 			g.fillRect(screenWidth - 16, 16 + line*(fontHeight + 3), 11, fontHeight);
@@ -814,9 +808,9 @@ public class MainCanvas extends GameCanvas implements Runnable
 	}
 	
 	/** Metoda wyswietlajaca biblioteke muzyczna na wyswietlaczu
-	 * @author 							Kuba Odias
+	 * @author 						Kuba Odias
 	 * @version 						0.2
-	 * @param g							Referencja do obiektu klasy Graphics, ktory pozwala na wyswietlenie tekstu
+	 * @param g						Referencja do obiektu klasy Graphics, ktory pozwala na wyswietlenie tekstu
 	 * @param player					Referencja do obiektu klasy odtwarzacza muzycznego
 	 * @param screenSelectedItemIndex	Indeks wybranego elementu na wyswietlaczu
 	 * @param screenNumberOfItems		Liczba elementow wyswietlonych na wyswietlaczu
@@ -824,12 +818,82 @@ public class MainCanvas extends GameCanvas implements Runnable
 	public void showMediaLibrary(Graphics g, BluetoothPlayer player, int screenSelectedItemIndex, int screenNumberOfItems)
 	{
 		int color = g.getColor();	// przechowanie uzywanego koloru
+		int textPos = 0;
+		String text;
 		
 		g.setColor(255, 255, 255);	// biala czcionka
-		for(int i=0; i < screenNumberOfItems; i++)
-			g.drawString("piosenka " + i, 10, i*(fontHeight + 5) + 8, Graphics.TOP | Graphics.LEFT);
+			
+		for(int i = 0; i < screenNumberOfItems; i++) {
+			text = bluetoothPlayer.getMediaLibrary().getItem(bluetoothPlayer.getMediaLibrary().getMediaLibrarySelectedItem() - 
+					screenSelectedItemIndex + i);
+			if (text != null)
+			{		
+				// jesli zmienil sie wybrany tekst
+				if ((screenSelectedItemIndex == i) && (text.equals(mediaLibraryLastText) == false))
+				{
+					mediaLibraryLastText = text;
+					mediaLibraryTextPos = 0;
+					mediaLibraryWaitTimeText = SCROLL_TIME_WAIT;
+				}
+				textPos = mediaLibraryTextPos;
+				
+				if(Font.getDefaultFont().stringWidth(text) <= screenWidth - 32)		// jesli caly tekst miesci sie na ekranie
+				{
+					g.setColor(255, 255, 255);	// biala czcionka
+					g.drawString(text, 10, i*(fontHeight + 5) + 8, Graphics.TOP | Graphics.LEFT);
+				}
+				else	// jesli tekst nie miesci sie na ekranie
+				{
+					String leftTextTmp = "";
+					int j = 0;
+					
+					//ucinanie tekstu dopoki nie miesci sie z lewej strony na ekranie (tylko dla zaznaczonego tekstu)
+					if (screenSelectedItemIndex == i)
+						while(Font.getDefaultFont().stringWidth(leftTextTmp) < textPos) {		
+							leftTextTmp = text.substring(0, ++j); 
+					}
+					
+					String textTmp = text.substring(j, text.length());
+					
+					boolean textRightCut = false;
+					while(Font.getDefaultFont().stringWidth(textTmp) > screenWidth - 24)	// ucinanie tekstu dopoki nie miesci sie z prawej strony na ekranie
+					{
+						textTmp = textTmp.substring(0, textTmp.length() - 1);
+						textRightCut = true;
+					}
+					
+					g.setColor(255, 255, 255);	// biala czcionka
+					g.drawString(textTmp, 10, i*(fontHeight + 5) + 8, Graphics.TOP | Graphics.LEFT);
+					
+					g.setColor(BACKGROUND_COLOR);	// zamazanie tekstu po bokach
+					g.fillRect(screenWidth - 10, i*(fontHeight + 5) + 8, 5, fontHeight);
+					
+					if(screenSelectedItemIndex == i)
+					{
+						if((textRightCut == false) && (mediaLibraryWaitTimeText == 0))	// jesli tekst przewinal sie do konca
+							mediaLibraryWaitTimeText = SCROLL_TIME_WAIT;
+						
+						if(mediaLibraryWaitTimeText == 0)
+							mediaLibraryTextPos += 2;		// przewiniecie tekstu
+						else		// jesli tekst ma byc wyswietlany w miejscu bez przesuwania
+						{
+							mediaLibraryWaitTimeText--;
+							if((mediaLibraryWaitTimeText == 0) && (mediaLibraryTextPos != 0))		// w przypadku skonczenia czasu oczekiwania ma sie rozpoczac przewijanie od nowa
+							{
+								mediaLibraryWaitTimeText = SCROLL_TIME_WAIT;
+								mediaLibraryTextPos = 0;
+							}
+						}
+					}
+				}	
+			}
+		}
+	
+		g.setColor(255, 255, 255);
 		
-		g.drawRect(7, screenSelectedItemIndex*(fontHeight + 5) + 6, screenWidth - 16, fontHeight + 1);
+		// obwodka dla podswietlonego elementu
+		if (screenNumberOfItems > 0)
+			g.drawRect(7, screenSelectedItemIndex*(fontHeight + 5) + 6, screenWidth - 16, fontHeight + 1);
 		
 		g.setColor(color);
 	}
