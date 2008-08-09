@@ -1,15 +1,16 @@
 package bluectrl;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Vector;
 
-import org.kxml.parser.*;
-import org.kxml.kdom.*;
-import org.kxml.*;
+import javax.microedition.lcdui.Graphics;
 
+import nanoxml.kXMLElement;
+import nanoxml.kXMLParseException;
 
 /**
  * Klasa odpowiedzialna za zaladowanie biblioteki muzycznej
@@ -24,7 +25,7 @@ public class MediaLibrary
 	 * @author Kuba Odias
 	 * @version 0.5
 	 */
-	private class Track
+	public class Track
 	{
 		/** Dlugosc utworu w sekundach */
 		int length;
@@ -58,17 +59,23 @@ public class MediaLibrary
 	/*******************************VARIABLES*************************************/
 	
 	/** Obiekt odpowiedzialny za parsowanie pliku XML otrzymanego przez Bluetooth */
-	private XmlParser xmlParser;
+	//private XmlParser xmlParser;
 	
 	/** Indeks wybranego utworu w bibliotece muzycznej */
 	private int mediaLibrarySelectedItem;	/////-1
 	
 	/** Tablica przechowujaca informacje o utworach */
-	private Hashtable mediaLibraryItems;
+	public Hashtable mediaLibraryItems;
 	
 	/** Rozmiar biblioteki muzycznej pobieranej z komputera w bajtach */
 	private int mediaLibrarySize;
+	
+	/** Number of bytes already downloaded to the mobile device */
+	private int mediaLibraryDownloadedBytes;
 
+	/** Boolean variable that tells if media library was downloaded from server and parsed */
+	private boolean isLibraryDownloadedAndParsed;
+	
 	/*****************************************************************************/
 	
 	
@@ -80,7 +87,7 @@ public class MediaLibrary
 	/** Wybrany zostal poprzedni element w bibliotece muzycznej */
 	private static final int PREVIOUS_ITEM=1;
 	
-	public static final String playlistFilename = "playlist.xml";
+	//private static final String playlistFilename = "playlist.xml";
 
 	/*****************************************************************************/
 
@@ -92,9 +99,10 @@ public class MediaLibrary
 	 * @version 1.0
 	 */
 	public MediaLibrary() {
-		xmlParser = null;
+		//xmlParser = null;
 		mediaLibraryItems = new Hashtable();
 		mediaLibrarySelectedItem = 0;
+		isLibraryDownloadedAndParsed = false;
 	}
 	
 	/** Akcesor zmiennej mediaLibrarySelectedItem
@@ -113,10 +121,10 @@ public class MediaLibrary
 	 * @return		Ilosc bajtow przetworzona przez parser XML
 	 */
 	public int getMediaLibraryDownloadedBytes() {
-		if (xmlParser != null)
-			return xmlParser.getBufPos();
+		//if (xmlParser != null)
+			//return xmlParser.getBufPos();
 		
-		return 0;
+		return mediaLibraryDownloadedBytes;
 	}
 	
 	/** Akcesor zmiennej mediaLibrarySize
@@ -126,6 +134,24 @@ public class MediaLibrary
 	 */
 	public int getMediaLibrarySize() {
 		return mediaLibrarySize;
+	}
+	
+	/** Akcesor zmiennej libraryDownloadedAndParsed
+	 * @author		Kuba Odias
+	 * @version	1.0
+	 * @return		Wartosc zmiennej libraryDownloadedAndParsed
+	 */
+	public boolean getLibraryDownloadedAndParsed() {
+		return isLibraryDownloadedAndParsed;
+	}
+	
+	/** Metoda ustawia wartosc zmiennej mediaLibraryDownloadedBytes
+	 * @author		Kuba Odias
+	 * @version	1.0
+	 * @param size	 Nowa wartosc zmiennej mediaLibraryDownloadedBytes
+	 */
+	public void setMediaLibraryDownloadedBytes(int size) {
+		mediaLibraryDownloadedBytes = size;
 	}
 	
 	/** Metoda ustawia wartosc zmiennej mediaLibrarySize
@@ -142,90 +168,92 @@ public class MediaLibrary
 	 * @version 0.6
 	 */
 	public void parsePlaylist(InputStream in) {
-		Document doc = new Document();
-		int id, length;
-		String title, artist, album;
+		byte[] bytes;
+		int id = 0, length = 0;
+		String title = null, artist = null, album = null;
 
+		mediaLibraryDownloadedBytes = 0;
+		isLibraryDownloadedAndParsed = false;
 		try {
-			InputStreamReader isr = new InputStreamReader(in);
 			
-			xmlParser = new XmlParser( isr );
+	        bytes = new byte[this.mediaLibrarySize + 1];
+	        byte byteRead = 0;
+	        while (mediaLibraryDownloadedBytes < mediaLibrarySize) {
+	        	if((byteRead=(byte)in.read()) >= 0) {
+	        		bytes[mediaLibraryDownloadedBytes] = byteRead;
+	        		mediaLibraryDownloadedBytes++;
+	        	}
+	        	else
+	        		break;
+	        }
+	       
+       	    ByteArrayInputStream xmlStream = new ByteArrayInputStream(bytes);
+			InputStreamReader xmlReader = new InputStreamReader(xmlStream);
+			kXMLElement root = new kXMLElement();
 			
-			// Pass the parser to the document. At this point the
-			// entire resource is parsed and now resides in memory.
-			doc.parse( xmlParser );
+		    root.parseFromReader(xmlReader);
 
-			xmlParser = null;
-		} 
+		    xmlReader.close();
+	        
+		    Vector list = root.getChildren();
+            
+            for( int i = 0; i < list.size(); ++i ){
+                kXMLElement node = (kXMLElement) list.elementAt( i );
+                String      tag = node.getTagName();
+                
+                if (tag == null) continue;
+                if (!tag.equals("item")) continue;
+                if (tag.equals("item")) {
+                	if (node.countChildren() != 0) {
+                		Vector itemList = node.getChildren();
+      
+                		id = 0;
+            			length = 0;
+            			title = artist = album = null;
+            			
+                		for( int j = 0; j < itemList.size(); j++){
+                            kXMLElement itemNode = (kXMLElement)itemList.elementAt( j );
+                            String      itemTag = itemNode.getTagName();
+                            
+                            if (itemTag == null) continue;
+                            else if (itemTag.equals("id")) {
+            					id = Integer.parseInt(itemNode.getContents());
+            				}
+            				else if (itemTag.equals("Length")) {
+            					length = Integer.parseInt(itemNode.getContents());
+            				}
+            				else if (itemTag.equals("Title")) {
+            					title = itemNode.getContents();
+            				}
+            				else if (itemTag.equals("Artist")) {
+            					artist = itemNode.getContents();
+            				}
+            				else if (itemTag.equals("Album")) {
+            					album = itemNode.getContents();
+            				}
+                          
+                		}
+                		
+                		Track track = new MediaLibrary.Track(length, title, artist, album);
+    					Integer id_int = new Integer(id);
+    					
+    					// add new music track to the hashtable
+    					mediaLibraryItems.put(id_int, track);
+                	}
+                }
+   			}
+			
+			// mark library as read
+            isLibraryDownloadedAndParsed = true;
+		}
+		catch( kXMLParseException pe ) {
+			pe.printStackTrace();
+		}
 		catch (IOException ioe) {
 			ioe.printStackTrace();
-
-			xmlParser = null;
-			doc = null;
-			
 			return;
 		} 
-
-		// Now we get the root element which is "playlist"
-		Element root = doc.getRootElement();
-
-		int child_count = root.getChildCount();
-
-		for (int i = 0; i < child_count ; i++ ) {
-			if (root.getType(i) != Xml.ELEMENT) {
-				continue;
-			}
-						
-			Element kid = root.getElement(i);
-			
-			// 'item' is an only valid element
-			if (!kid.getName().equals("item")) {
-
-				continue;
-			}
-			
-			// clear info about the track
-			id = 0;
-			length = 0;
-			title = artist = album = null;
-			
-			// new item was found - add it's child to the structure
-			int address_item_count = kid.getChildCount();
-
-			for (int j = 0; j < address_item_count ; j++) {
-				if (kid.getType(j) != Xml.ELEMENT) {
-					continue;
-				}
-				
-				Element item = kid.getElement(j);
-
-				if (item.getName().equals("id")) {
-					id = Integer.parseInt(item.getText(0));
-				}
-				else if (item.getName().equals("Length")) {
-					length = Integer.parseInt(item.getText(0));
-				}
-				else if (item.getName().equals("Title")) {
-					title = item.getText(0);
-				}
-				else if (item.getName().equals("Artist")) {
-					artist = item.getText(0);
-				}
-				else if (item.getName().equals("Album")) {
-					album = item.getText(0);
-				}
-				
-				item = null;
-			}
-			
-			Track track = new MediaLibrary.Track(length, title, artist, album);
-			Integer id_int = new Integer(id);
-			
-			// add new music track to the hashtable
-			mediaLibraryItems.put(id_int, track);
-			
-			kid = null;
-		}
+	
 	}	
 	
 	/** Metoda wybierajaca nowy element w bibliotece muzycznej
@@ -257,10 +285,10 @@ public class MediaLibrary
 	 * @param index	Indeks szukanego utworu na liscie
 	 * @return 		Nazwa utworu i wykonawcy
 	 */
-	public String getItem(int index) {
-		if (index > mediaLibraryItems.size())
+	public String getItem(int index, Graphics g) {
+		if (index >= mediaLibraryItems.size())
 			return null;
-		
+				
 		Track track = (Track)mediaLibraryItems.get(new Integer(index));
 		
 		return (track.artist + "-" + track.title);

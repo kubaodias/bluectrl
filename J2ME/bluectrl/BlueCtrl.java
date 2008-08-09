@@ -9,12 +9,6 @@ import javax.microedition.lcdui.game.GameCanvas;
 import javax.microedition.midlet.MIDlet;
 import javax.microedition.midlet.MIDletStateChangeException;
 
-import org.kxml.parser.*;
-import org.kxml.kdom.*;
-import org.kxml.*;
-
-
-
 /** Glowna klasa aplikacji
  * @author Kuba Odias
  * @version 0.9
