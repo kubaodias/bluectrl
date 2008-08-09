@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+#-*- coding: iso-8859-2 -*-
+
 # BlueCtrl_server.py
 # Kuba Odias
 # 2008
@@ -14,6 +16,7 @@ class BlueCtrl:
 	"""Class used to manage BlueCtrl server"""
 	
 	playlist_file_name = "playlist.xml"
+	BLUETOOTH_PACKET_SIZE = 32
 
 	def __init__(self):
 		"""Constructor of the BlueCtrl class objects."""
@@ -209,6 +212,8 @@ class BlueCtrl:
 	def bluetooth_send_command_with_data(self, command, data):
 		"""Send command followed by data to client."""
 
+		playlist_to_be_sent = False
+
 		if data == "title":	
 			data = self.title
 		elif data == "artist":
@@ -226,6 +231,7 @@ class BlueCtrl:
 		# send size of the playlist file
 		elif data == "playlist":	
 			data = str(os.stat(self.playlist_file_name)[6])
+			playlist_to_be_sent = True
 
 		if data == "":
 			data = ' '
@@ -250,9 +256,6 @@ class BlueCtrl:
 			self.client_sock.send(chr(len(data)))
 			length = self.client_sock.send(data)
 
-			if data == "playlist":
-				self.send_playlist()
-
 			if self.sleep_time > 0.2:
 				self.sleep_time = 0.2
 			elif self.sleep_time > 0.05:
@@ -262,6 +265,9 @@ class BlueCtrl:
 				return
 
 			print "Sent ", length, " bytes"
+
+			if playlist_to_be_sent == True:
+				self.send_playlist()
 		except IOError:
 			print "IOError: bluetooth_send_command_with_data(%s)" % command + ", " + data
 			self.close_connection()
@@ -425,17 +431,33 @@ class BlueCtrl:
 		except IOError:
 			print "IOError: send_playlist - open file"
 			return
-
-		i = 0
+		
 		size = os.stat(self.playlist_file_name)[6]
+		i = 0
+		bytes_added = 0
+		str_to_send = []
 
+		print "Sending of playlist in progress..."
 		while i < size:
-			self.client_sock.send(playlist_input_file.read(1))
+			c = playlist_input_file.read(1)
+
+			# send '?' instead of unicode characters
+			if ord(c) > 127:
+				c = '?'
+		
+			str_to_send.append(c)
+			bytes_added = bytes_added + 1
+
+			if (bytes_added == self.BLUETOOTH_PACKET_SIZE) or (i == size - 1):
+				self.client_sock.send(''.join(str_to_send))
+				str_to_send = []
+				bytes_added = 0
+
 			i = i + 1
 
-		print "Send " + i + " / " + size + " bytes of " + self.playlist.file_name
-		
-		# zamkniecie otwartego pliku
+		self.client_sock.send(chr(0))	# this probably is not sent in string so send it explicitly
+		print "Sent %d bytes of playlist file" % size
+		# close playlist file
 		playlist_input_file.close()
 
 
