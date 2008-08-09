@@ -86,6 +86,12 @@ public class MainCanvas extends GameCanvas implements Runnable
 	
 	private String lastText0, lastText1, mediaLibraryLastText;
 	
+	/** Podczas normalnej pracy jest sprawdzane czy przycisk zostal zwolniony po jego nacisnieciu - 
+	 * dopiero wtedy mozliwe jest ponowne obsluzenie komunikatu. Jesli jednak uzytkownik przytrzymal przycisk
+	 * na tyle dlugo ze zostalo wykrytych MAX_BUTTON_PRESSED_IN_A_ROW_COUNT klikniec, to kolejne obslugi
+	 * komunikatow beda odbywaly sie bez czekania na zwolnienie przycisku*/
+	private int buttonPressedInARowCount = 0;
+	
 	/*****************************************************************************/
 	
 	
@@ -135,6 +141,12 @@ public class MainCanvas extends GameCanvas implements Runnable
 	
 	/** Czas oczekiwania podczas skonczenia przewijania tekstu */
 	private static final int SCROLL_TIME_WAIT = 20;
+	
+	/** Podczas normalnej pracy jest sprawdzane czy przycisk zostal zwolniony po jego nacisnieciu - 
+	 * dopiero wtedy mozliwe jest ponowne obsluzenie komunikatu. Jesli jednak uzytkownik przytrzymal przycisk
+	 * na tyle dlugo ze zostalo wykrytych MAX_BUTTON_PRESSED_IN_A_ROW_COUNT klikniec, to kolejne obslugi
+	 * komunikatow beda odbywaly sie bez czekania na zwolnienie przycisku*/
+	private static final int MAX_BUTTON_PRESSED_IN_A_ROW_COUNT = 5;
 
 	/*****************************************************************************/
 	
@@ -335,17 +347,7 @@ public class MainCanvas extends GameCanvas implements Runnable
 		while(true) {		
 			updateState();	// sprawdzenie stanu przyciskow 
 			updateScreen();	// wyswietlenie nowej zawartosci ekranu
-	        
-			/*if(bluetoothPlayer.getBluetoothError())
-			{
-				Alert alert = new Alert("Bluetooth Error");
-				alert.setString("Bluetooth connection broken. Connecting again in 5 seconds");
-	    		alert.setType(AlertType.ERROR);
-	    		alert.setTimeout(4000);
-				display.setCurrent(alert, this);
-				bluetoothPlayer.setBluetoothError(false);
-			}
-			*/
+
 			try {
 				Thread.sleep(50);
 			}
@@ -466,41 +468,63 @@ public class MainCanvas extends GameCanvas implements Runnable
 		{
 			if(((keys & FIRE_PRESSED) != 0) && (nextPressed == false) && (previousPressed == false))	// jesli przycisk 'Play / Pause' jest wcisniety, a pozostale nie sa wcisniete
 			{
+				buttonPressedInARowCount = 0;
 				if(firePressed == false)
 					soundPlayer.play(SoundPlayer.CLICK_SOUND);
 				firePressed = true;
 			}
 			else if(((keys & FIRE_PRESSED) == 0) && (firePressed == true)) // przycisk zostal zwolniony
 			{
+				buttonPressedInARowCount = 0;
 				firePressed = false;			
 			}
 			if(((keys & DOWN_PRESSED) != 0) && (firePressed == false) && (previousPressed == false))	// jesli przycisk 'Next' jest wcisniety, a pozostale nie sa wcisniete
 			{
+				System.out.println("many: " + buttonPressedInARowCount);
+				if (nextPressed == true)
+					buttonPressedInARowCount++;
+				else
+					buttonPressedInARowCount = 0;
 				nextPressed = true;
+				
+				
 			}
-			else if(((keys & DOWN_PRESSED) == 0) && (nextPressed == true)) // przycisk zostal zwolniony
-			{
-				if(bluetoothPlayer.getMediaLibrary().selectItemInMediaLibrary(NEXT_ITEM) == true)	// jesli wybrany utwor nie byl ostatni na liscie
-				{
+			// button was released or hold down for more than MAX_BUTTON_PRESSED_IN_A_ROW_COUNT clicks
+			if((((keys & DOWN_PRESSED) == 0) && (nextPressed == true)) ||
+				(((keys & DOWN_PRESSED) != 0) && (buttonPressedInARowCount >= MAX_BUTTON_PRESSED_IN_A_ROW_COUNT))) { 
+				// jesli wybrany utwor nie byl ostatni na liscie
+				if(bluetoothPlayer.getMediaLibrary().selectItemInMediaLibrary(NEXT_ITEM) == true)	{
 					if(mediaLibrarySelectedItemOnScreen < mediaLibraryItemsNumberOnScreen - 1)	
 						mediaLibrarySelectedItemOnScreen++;
 				}
-				nextPressed = false;
+				
+				// nextPressed is set to false only if button was released
+				if ((((keys & DOWN_PRESSED) != 0) && (buttonPressedInARowCount >= MAX_BUTTON_PRESSED_IN_A_ROW_COUNT)) == false)
+					nextPressed = false;
 			}
 			
-			if(((keys & UP_PRESSED) != 0) && (nextPressed == false) && (firePressed == false))	// jesli przycisk 'Previous' jest wcisniety, a pozostale nie sa wcisniete
-			{
+			// jesli przycisk 'Previous' jest wcisniety, a pozostale nie sa wcisniete
+			if(((keys & UP_PRESSED) != 0) && (nextPressed == false) && (firePressed == false)) {
+				if (previousPressed == true)
+					buttonPressedInARowCount++;
+				else
+					buttonPressedInARowCount = 0;
 				previousPressed = true;
 			}
-			else if(((keys & UP_PRESSED) == 0) && (previousPressed == true)) // przycisk zostal zwolniony
-			{
-				if(bluetoothPlayer.getMediaLibrary().selectItemInMediaLibrary(PREVIOUS_ITEM) == true)	// jesli wybrany utwor nie byl pierwszy na liscie
-				{
+			
+			// button was released or hold down for more than MAX_BUTTON_PRESSED_IN_A_ROW_COUNT clicks
+			if((((keys & UP_PRESSED) == 0) && (previousPressed == true)) ||
+				(((keys & UP_PRESSED) != 0) && (buttonPressedInARowCount >= MAX_BUTTON_PRESSED_IN_A_ROW_COUNT))) {
+				
+				// jesli wybrany utwor nie byl pierwszy na liscie
+				if(bluetoothPlayer.getMediaLibrary().selectItemInMediaLibrary(PREVIOUS_ITEM) == true) {	
 					if(mediaLibrarySelectedItemOnScreen > 0)	
 						mediaLibrarySelectedItemOnScreen--;
 				}
 				
-				previousPressed = false;
+				// previousPressed is set to false only if button was released
+				if ((((keys & UP_PRESSED) != 0) && (buttonPressedInARowCount >= MAX_BUTTON_PRESSED_IN_A_ROW_COUNT)) == false)
+					previousPressed = false;
 			}
 		}
 		
@@ -607,7 +631,7 @@ public class MainCanvas extends GameCanvas implements Runnable
 			if (bluetoothPlayer.getIsConnectedToServer() == true) {
 				drawText(g, "Loading media library", 0);
 				drawText(g, "Please wait...", 1);
-				
+			
 				// display size of the media library
 				if (bluetoothPlayer.getMediaLibrarySize() >= 1024) {
 					drawText(g, "Total size: " + bluetoothPlayer.getMediaLibrarySize()/1024 + "." +
@@ -669,8 +693,9 @@ public class MainCanvas extends GameCanvas implements Runnable
 		g.fillRect(12, screenHeight - 27 + buttonsLocation, progress, 14);
 		
 		g.setColor(70, 70, 70);
-		//if(bluetoothPlayer.getCurrentTimeString() != null)
-		g.drawString(bluetoothPlayer.getCurrentTimeString(), screenWidth / 2 - 17, screenHeight - 26 + buttonsLocation, Graphics.TOP | Graphics.LEFT);
+		
+		if (this.displayedScreen == MainCanvas.PLAYER_SCREEN)
+			g.drawString(bluetoothPlayer.getCurrentTimeString(), screenWidth / 2 - 17, screenHeight - 26 + buttonsLocation, Graphics.TOP | Graphics.LEFT);
 		
 		g.setColor(color);
 		

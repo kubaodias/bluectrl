@@ -87,7 +87,8 @@ public class MediaLibrary
 	/** Wybrany zostal poprzedni element w bibliotece muzycznej */
 	private static final int PREVIOUS_ITEM=1;
 	
-	//private static final String playlistFilename = "playlist.xml";
+	/** Maximal size of one packet of data with playlist that is send over Bluetooth */
+	private static final int DOWNLOAD_PACKET_SIZE = 32;
 
 	/*****************************************************************************/
 
@@ -168,7 +169,7 @@ public class MediaLibrary
 	 * @version 0.6
 	 */
 	public void parsePlaylist(InputStream in) {
-		byte[] bytes;
+		byte[] byteArray;
 		int id = 0, length = 0;
 		String title = null, artist = null, album = null;
 
@@ -176,18 +177,25 @@ public class MediaLibrary
 		isLibraryDownloadedAndParsed = false;
 		try {
 			
-	        bytes = new byte[this.mediaLibrarySize + 1];
-	        byte byteRead = 0;
+	        byteArray = new byte[this.mediaLibrarySize + 1];
+	        int bytesRead;
+	        int bytesToRead;
+
 	        while (mediaLibraryDownloadedBytes < mediaLibrarySize) {
-	        	if((byteRead=(byte)in.read()) >= 0) {
-	        		bytes[mediaLibraryDownloadedBytes] = byteRead;
-	        		mediaLibraryDownloadedBytes++;
+	        	// if there's less than DOWNLOAD_PACKET_SIZE to read from Bluetooth socket	        	
+	        	if (((mediaLibrarySize - mediaLibraryDownloadedBytes) / DOWNLOAD_PACKET_SIZE) == 0)
+	        		bytesToRead = mediaLibrarySize - mediaLibraryDownloadedBytes;
+	        	else
+	        		bytesToRead = DOWNLOAD_PACKET_SIZE; 
+	        	
+	        	if((bytesRead=(byte)in.read(byteArray, mediaLibraryDownloadedBytes, bytesToRead)) >= 0) {
+	        		mediaLibraryDownloadedBytes += bytesRead;
 	        	}
 	        	else
 	        		break;
 	        }
 	       
-       	    ByteArrayInputStream xmlStream = new ByteArrayInputStream(bytes);
+       	    ByteArrayInputStream xmlStream = new ByteArrayInputStream(byteArray);
 			InputStreamReader xmlReader = new InputStreamReader(xmlStream);
 			kXMLElement root = new kXMLElement();
 			
