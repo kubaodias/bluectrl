@@ -14,11 +14,9 @@ import javax.bluetooth.LocalDevice;
 import javax.bluetooth.RemoteDevice;
 import javax.bluetooth.ServiceRecord;
 import javax.bluetooth.UUID;
-import javax.microedition.io.Connection;
+
 import javax.microedition.io.Connector;
 import javax.microedition.io.StreamConnection;
-import javax.microedition.io.file.FileConnection;
-import javax.microedition.rms.RecordStore;
 
 
 /**
@@ -174,6 +172,7 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener
 		bluetoothTimer = new BluetoothTimer();
 		mediaLibrary = new MediaLibrary();
 
+		//mediaLibrary.parsePlaylist(this.getClass().getResourceAsStream("/res/playlist.xml"));
 		new Thread(this).start();
 	}
 	
@@ -1105,78 +1104,7 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener
 			addCommandToProcess(BluetoothPlayer.COMMAND_GET_MEDIA_LIBRARY);
 		}
 	}
-	
-	/** Metoda pobiera zawartosc biblioteki muzycznej przez Bluetooth i zapisuje do pliku
-	 * @author Kuba Odias
-	 * @version 0.6
-	 
-	private void downloadMediaLibrary() {
-		Connection c = null;
-        OutputStream os = null;
-        
-        try {
-            c = Connector.open("file:///" + mediaLibrary.playlistFilename, Connector.READ_WRITE);
-            FileConnection fc = (FileConnection)c;
-            if (!fc.exists())
-                fc.create();
-            else
-                fc.truncate(0);
-            os = fc.openOutputStream();
-        } 
-        catch (Exception e) {
-            return;
-        }
-        
-		try {
-			if (mediaLibrarySize <= 0) 
-	        {
-	        	bluetoothSendAcknowledge("ERROR");
-	        	return;
-	        }
-	        
-	        byte[] input = new byte[1];
-	        int ret;
 
-        	for (mediaLibraryDownloadedBytes = 0; mediaLibraryDownloadedBytes < mediaLibrarySize; 
-        		mediaLibraryDownloadedBytes++) {
-        		ret = in.read(input, mediaLibraryDownloadedBytes, 1);
-	            os.write(input);
-	            if (ret == -1) {
-		        	bluetoothSendAcknowledge("ERROR");
-		        	closeConnection();
-		        	return;
-		        }
-        	}       
-        
-	        os.flush();
-	        
-	        bluetoothSendAcknowledge("ACK");
-	        
-	        if (sleepTime > 100)
-				sleepTime=100;
-			else if(sleepTime > 20)
-				sleepTime-=10;
-		} 
-		catch (IOException e) 
-		{
-			bluetoothSendAcknowledge("ERROR");
-			closeConnection();
-			return;
-		}
-		
-		try {
-            if (os != null)
-                os.close();
-            if (c != null)
-                c.close();
-        } 
-		catch (Exception ex) {
-            ex.printStackTrace();
-        }
-	}
-	*/
-
-	
 	/*****************************************************************************/
 
 }

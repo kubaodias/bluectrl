@@ -11,7 +11,6 @@ import javax.microedition.m3g.Loader;
 import javax.microedition.m3g.Object3D;
 import javax.microedition.m3g.World;
 
-
 /**
  * Obsluga ekranu midletu
  * @author Kuba Odias
@@ -608,16 +607,24 @@ public class MainCanvas extends GameCanvas implements Runnable
 			if (bluetoothPlayer.getIsConnectedToServer() == true) {
 				drawText(g, "Loading media library", 0);
 				drawText(g, "Please wait...", 1);
-				drawText(g, bluetoothPlayer.getMediaLibraryDownloadedBytes() + "/" + bluetoothPlayer.getMediaLibrarySize() + " bytes", 2);
+				
+				// display size of the media library
+				if (bluetoothPlayer.getMediaLibrarySize() >= 1024) {
+					drawText(g, "Total size: " + bluetoothPlayer.getMediaLibrarySize()/1024 + "." +
+							(bluetoothPlayer.getMediaLibrarySize() % 1024)*100/1024 + " kB", 3);
+				}
+				else 
+					drawText(g, "Total size: " + bluetoothPlayer.getMediaLibrarySize() + " B", 3);
 				
 				int size = bluetoothPlayer.getMediaLibrarySize();
+				
 				if (size == 0)	// to avoid dividing by zero
 					size = 1;
 				
 				showProgressBar(g, bluetoothPlayer.getMediaLibraryDownloadedBytes(), size);
 				
-				// if 100% of the playlist file was downloaded
-				if (((bluetoothPlayer.getMediaLibraryDownloadedBytes() * 100) / size) == 100)
+				// if the playlist file was downloaded and parsed
+				if (bluetoothPlayer.getMediaLibrary().getLibraryDownloadedAndParsed() == true)
 					setDisplayedScreen(MainCanvas.MEDIA_LIBRARY_SCREEN);
 			}
 			else 
@@ -627,7 +634,6 @@ public class MainCanvas extends GameCanvas implements Runnable
 			if(backgroundLayer != null) {
 				backgroundLayer.paint(g);
 			}
-			
 			showMediaLibrary(g, bluetoothPlayer, mediaLibrarySelectedItemOnScreen, mediaLibraryItemsNumberOnScreen);
 		}
 		
@@ -822,12 +828,58 @@ public class MainCanvas extends GameCanvas implements Runnable
 		String text;
 		
 		g.setColor(255, 255, 255);	// biala czcionka
-			
+		
 		for(int i = 0; i < screenNumberOfItems; i++) {
+			
+			//if (bluetoothPlayer.getMediaLibrary().mediaLibraryItems != null)
+			//{
+				/*drawText(g, "ile: " + bluetoothPlayer.getMediaLibrary().mediaLibraryItems.size(), 0);
+			flushGraphics();
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}*
+			
+			MediaLibrary.Track track = (MediaLibrary.Track)bluetoothPlayer.getMediaLibrary().mediaLibraryItems.get(new Integer(1));
+			
+			String.valueOf(bluetoothPlayer.getMediaLibrary().bytes);
+			}
+			
+			drawText(g, "ind:" + (bluetoothPlayer.getMediaLibrary().getMediaLibrarySelectedItem() - screenSelectedItemIndex + i), 2);
+			flushGraphics();
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}*/
+			
 			text = bluetoothPlayer.getMediaLibrary().getItem(bluetoothPlayer.getMediaLibrary().getMediaLibrarySelectedItem() - 
-					screenSelectedItemIndex + i);
+					screenSelectedItemIndex + i, g);
+			/*if(text == null)
+			drawText(g, "ind:" + (bluetoothPlayer.getMediaLibrary().getMediaLibrarySelectedItem() - screenSelectedItemIndex + i), 2);
+			flushGraphics();
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			*/
+			
+			
 			if (text != null)
 			{		
+				/*drawText(g, "t:" + text, 0);
+				flushGraphics();
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}*/
 				// jesli zmienil sie wybrany tekst
 				if ((screenSelectedItemIndex == i) && (text.equals(mediaLibraryLastText) == false))
 				{
