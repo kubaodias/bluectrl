@@ -170,8 +170,8 @@ public class MediaLibrary
 	 */
 	public void parsePlaylist(InputStream in) {
 		byte[] byteArray;
-		int id = 0, length = 0;
-		String title = null, artist = null, album = null;
+		int id, length;
+		String title, artist, album;
 
 		mediaLibraryDownloadedBytes = 0;
 		isLibraryDownloadedAndParsed = false;
