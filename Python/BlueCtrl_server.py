@@ -455,7 +455,6 @@ class BlueCtrl:
 
 			i = i + 1
 
-		self.client_sock.send(chr(0))	# this probably is not sent in string so send it explicitly
 		print "Sent %d bytes of playlist file" % size
 		# close playlist file
 		playlist_input_file.close()
