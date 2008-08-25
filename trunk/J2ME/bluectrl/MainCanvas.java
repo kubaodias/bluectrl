@@ -16,8 +16,7 @@ import javax.microedition.m3g.World;
  * @author Kuba Odias
  * @version 0.2
  */
-public class MainCanvas extends GameCanvas implements Runnable
-{
+public class MainCanvas extends GameCanvas implements Runnable {
 	/********************************VARIABLES************************************/
 	
 	/**Glowny obiekt reprezentujacy scene*/
@@ -158,8 +157,7 @@ public class MainCanvas extends GameCanvas implements Runnable
 	 * @version 1.0
 	 * @throws IOException
 	 */
-    public MainCanvas() throws IOException 
-    {
+    public MainCanvas() throws IOException {
     	super(true);
     	
     	soundPlayer = new SoundPlayer();	// uruchomienie watku odpowiedzialnego za odtwarzanie dzwiekow
@@ -263,17 +261,17 @@ public class MainCanvas extends GameCanvas implements Runnable
 	        
 	        if((keys & FIRE_PRESSED) == 0)	// jesli przycisk nie zostal wcisniety, tylko animacja dobiegla konca
 	        	Thread.sleep(1000);
-    	}
+    	} 
     	catch (InterruptedException e) {
     		soundPlayer.play(SoundPlayer.ERROR_SOUND);
     		System.out.println("Praca watku przerysowujacego zawartosc ekranu zostala przerwana!");
 			e.printStackTrace();
-		}
+		} 
     	catch (IOException e) {
     		soundPlayer.play(SoundPlayer.ERROR_SOUND);
     		System.out.println("Blad podczas wczytywania pliku z zasobow!");
 			e.printStackTrace();
-		}
+		} 
     	catch(Exception e) {
     		soundPlayer.play(SoundPlayer.ERROR_SOUND);
     		System.out.println("Nieznany wyjatek");
@@ -407,8 +405,8 @@ public class MainCanvas extends GameCanvas implements Runnable
 					
 					nextPressed = true;
 				}
-				else if(((keys & RIGHT_PRESSED) == 0) && (nextPressed == true)) // przycisk zostal zwolniony
-				{
+				// przycisk zostal zwolniony
+				else if(((keys & RIGHT_PRESSED) == 0) && (nextPressed == true)) {
 					if(nextSprite.getFrame() == NEXT_ICON_PRESSED)	
 						nextSprite.setFrame(NEXT_ICON);
 					
@@ -418,21 +416,19 @@ public class MainCanvas extends GameCanvas implements Runnable
 					if(bluetoothPlayer.getTotalTime() != 0)	// jesli utwor jest odtwarzany lub zapauzowany	
 						playPauseSprite.setFrame(PAUSE_ICON);
 				}
-				
-				if(((keys & LEFT_PRESSED) != 0) && (nextPressed == false) && (firePressed == false))	// jesli przycisk 'Previous' jest wcisniety, a pozostale nie sa wcisniete
-				{
+				// jesli przycisk 'Previous' jest wcisniety, a pozostale nie sa wcisniete
+				if(((keys & LEFT_PRESSED) != 0) && (nextPressed == false) && (firePressed == false)) {
 					if(previousSprite.getFrame() == PREVIOUS_ICON)	
 						previousSprite.setFrame(PREVIOUS_ICON_PRESSED);
 					
-					if(previousPressed == false)
-					{
+					if(previousPressed == false) {
 						soundPlayer.play(SoundPlayer.CLICK_SOUND);
 					}
 					
 					previousPressed = true;
 				}
-				else if(((keys & LEFT_PRESSED) == 0) && (previousPressed == true)) // przycisk zostal zwolniony
-				{
+				// przycisk zostal zwolniony
+				else if(((keys & LEFT_PRESSED) == 0) && (previousPressed == true)) {
 					if(previousSprite.getFrame() == PREVIOUS_ICON_PRESSED)	
 						previousSprite.setFrame(PREVIOUS_ICON);
 					
@@ -442,21 +438,17 @@ public class MainCanvas extends GameCanvas implements Runnable
 					if(bluetoothPlayer.getTotalTime() != 0)	// jesli utwor jest odtwarzany lub zapauzowany	
 						playPauseSprite.setFrame(PAUSE_ICON);
 				}
-				
-				if(((keys & UP_PRESSED) != 0) && (previousPressed == false) && (nextPressed == false) && (firePressed == false))	// jesli przycisk 'Up' jest wcisniety, a pozostale nie sa wcisniete
-				{				
-					if(previousPressed == false)
-					{
+				// jesli przycisk 'Up' jest wcisniety, a pozostale nie sa wcisniete
+				if(((keys & UP_PRESSED) != 0) && (previousPressed == false) && (nextPressed == false) && (firePressed == false)) {				
+					if(previousPressed == false) {
 						soundPlayer.play(SoundPlayer.CLICK_SOUND);
 					}
 					
 					bluetoothPlayer.volumeUp();
 				}
-				
-				if(((keys & DOWN_PRESSED) != 0) && (previousPressed == false) && (nextPressed == false) && (firePressed == false))	// jesli przycisk 'Down' jest wcisniety, a pozostale nie sa wcisniete
-				{
-					if(previousPressed == false)
-					{
+				// jesli przycisk 'Down' jest wcisniety, a pozostale nie sa wcisniete
+				if(((keys & DOWN_PRESSED) != 0) && (previousPressed == false) && (nextPressed == false) && (firePressed == false)) {
+					if(previousPressed == false) {
 						soundPlayer.play(SoundPlayer.CLICK_SOUND);
 					}
 					
@@ -464,30 +456,27 @@ public class MainCanvas extends GameCanvas implements Runnable
 				}
 			}
 		}
-		if(displayedScreen == MEDIA_LIBRARY_SCREEN)	// jesli wyswietlany jest ekran biblioteki muzycznej
-		{
-			if(((keys & FIRE_PRESSED) != 0) && (nextPressed == false) && (previousPressed == false))	// jesli przycisk 'Play / Pause' jest wcisniety, a pozostale nie sa wcisniete
-			{
+		// jesli wyswietlany jest ekran biblioteki muzycznej 
+		if(displayedScreen == MEDIA_LIBRARY_SCREEN) {
+			// jesli przycisk akcji jest wcisniety, a pozostale nie sa wcisniete
+			if(((keys & FIRE_PRESSED) != 0) && (nextPressed == false) && (previousPressed == false)) {
 				buttonPressedInARowCount = 0;
 				if(firePressed == false)
 					soundPlayer.play(SoundPlayer.CLICK_SOUND);
 				firePressed = true;
 			}
-			else if(((keys & FIRE_PRESSED) == 0) && (firePressed == true)) // przycisk zostal zwolniony
-			{
+			// przycisk zostal zwolniony
+			else if(((keys & FIRE_PRESSED) == 0) && (firePressed == true)) {
 				buttonPressedInARowCount = 0;
 				firePressed = false;			
 			}
-			if(((keys & DOWN_PRESSED) != 0) && (firePressed == false) && (previousPressed == false))	// jesli przycisk 'Next' jest wcisniety, a pozostale nie sa wcisniete
-			{
-				System.out.println("many: " + buttonPressedInARowCount);
+			// jesli przycisk 'Down' jest wcisniety, a pozostale nie sa wcisniete
+			if(((keys & DOWN_PRESSED) != 0) && (firePressed == false) && (previousPressed == false)) {
 				if (nextPressed == true)
 					buttonPressedInARowCount++;
 				else
 					buttonPressedInARowCount = 0;
-				nextPressed = true;
-				
-				
+				nextPressed = true;	
 			}
 			// button was released or hold down for more than MAX_BUTTON_PRESSED_IN_A_ROW_COUNT clicks
 			if((((keys & DOWN_PRESSED) == 0) && (nextPressed == true)) ||
@@ -527,32 +516,26 @@ public class MainCanvas extends GameCanvas implements Runnable
 					previousPressed = false;
 			}
 		}
-		
-		if(volumeLevel != bluetoothPlayer.getVolumeLevel())		// jesli poziom glosnosci sie zmienil
-		{
+		// if volume level has changed
+		if(volumeLevel != bluetoothPlayer.getVolumeLevel()) {
 			showVolume = 15;
 			volumeLevel = bluetoothPlayer.getVolumeLevel();
 		}
 		
-		if(bluetoothPlayer.getIsConnectedToServer() == false)
-		{
+		if(bluetoothPlayer.getIsConnectedToServer() == false) {
 			if(buttonsLocation < 70)
 				buttonsLocation+=5;
 		}
 		
-		if((bluetoothPlayer.getIsConnectedToServer() == true) && (buttonsLocation > 0))
-		{
+		if((bluetoothPlayer.getIsConnectedToServer() == true) && (buttonsLocation > 0)) {
 			buttonsLocation-=5;
 		}
 		
-		if(bluetoothPlayer.getStateChanged())
-		{
+		if(bluetoothPlayer.getStateChanged()) {
 			String state = bluetoothPlayer.getPlayingState();
 			
-			if(state != null)
-			{
-					if(state.equals("PLAY") || state.equals("OTHER"))
-					{
+			if(state != null) {
+					if(state.equals("PLAY") || state.equals("OTHER")) {
 						playPauseSprite.setFrame(PAUSE_ICON);
 					}
 					else if(state.equals("PAUSE") || state.equals("STOP"))
@@ -671,8 +654,7 @@ public class MainCanvas extends GameCanvas implements Runnable
 	 * @param current	Aktualny czas trwania piosenki, 0 <= progress <= max
 	 * @param max		Calkowity czas trwania piosenki
 	 */
-	public void showProgressBar(Graphics g, int current, int max)
-	{
+	public void showProgressBar(Graphics g, int current, int max) {
 		int color = g.getColor();	// przechowanie uzywanego koloru
 		int progressBarWidth = screenWidth - 25;	// szerokosc paska postepu
 		int progress = (progressBarWidth * current) / max; 
@@ -707,8 +689,7 @@ public class MainCanvas extends GameCanvas implements Runnable
 	 * @param g			Referencja do obiektu klasy Graphics, ktory pozwala na narysowanie pasku postepu
 	 * @param progress	Liczba z zakresu 0 - 359: zakres luku
 	 */
-	public void showInquiryProgress(Graphics g, int progress)
-	{
+	public void showInquiryProgress(Graphics g, int progress) {
 		int c = g.getColor();
 		
 		g.setColor(255, 255, 255);
@@ -729,55 +710,51 @@ public class MainCanvas extends GameCanvas implements Runnable
 	 * @param line	Numer linii, w ktorej ma zostac wypisany tekst
 	 * @return		<code>true</code> jesli wypisanie tekstu powiodlo sie, <code>false</code> w przeciwnym razie
 	 */
-	public boolean drawText(Graphics g, String text, int line)
-	{
+	public boolean drawText(Graphics g, String text, int line) {
 		int color = g.getColor();	// przechowanie uzywanego koloru
 		int textPos = 0;
 		
 		g.setColor(BACKGROUND_COLOR);	// zamazanie starego tekstu
 		g.fillRect(16, 16 + line*(fontHeight + 3), screenWidth - 32, fontHeight);
 		
-		if(line == 0)
-		{
-			if(text.equals(lastText0) == false)		// jesli zmienil sie wyswietlany tekst
-			{
+		if(line == 0) {
+			// if displayed text had changed
+			if(text.equals(lastText0) == false) {
 				lastText0 = text;
 				textPos0 = 0;
 				waitTimeText0 = SCROLL_TIME_WAIT;
 			}
 			textPos = textPos0;
 		}
-		else if(line == 1)
-		{
-			if(text.equals(lastText1) == false)		// jesli zmienil sie wyswietlany tekst
-			{
+		else if(line == 1) {
+			// if displayed text had changed
+			if(text.equals(lastText1) == false) {
 				lastText1 = text;
 				textPos1 = 0;
 				waitTimeText1 = SCROLL_TIME_WAIT;
 			}
 			textPos = textPos1;
 		}
-		
-		if(Font.getDefaultFont().stringWidth(text) <= screenWidth - 32)		// jesli caly tekst miesci sie na ekranie
-		{
+		// if whole text can be displayed at once
+		if(Font.getDefaultFont().stringWidth(text) <= screenWidth - 32) {
 			g.setColor(255, 255, 255);	// biala czcionka
 			g.drawString(text, 16, 16 + line*(fontHeight + 3), Graphics.TOP | Graphics.LEFT);
 		}
-		else	// jesli tekst nie miesci sie na ekranie
-		{
+		// if text doesn't fit into the screen
+		else {
 			String leftTextTmp = "";
 			int i = 0;
 			
-			while(Font.getDefaultFont().stringWidth(leftTextTmp) < textPos)		// ucinanie tekstu dopoki nie miesci sie z lewej strony na ekranie
-			{
+			// cut text from the left as long as it doesn't fit to the screen
+			while(Font.getDefaultFont().stringWidth(leftTextTmp) < textPos) {
 				leftTextTmp = text.substring(0, ++i); 
 			}
 			
 			String textTmp = text.substring(i, text.length());
 			
 			boolean textRightCut = false;
-			while(Font.getDefaultFont().stringWidth(textTmp) > screenWidth - 32)	// ucinanie tekstu dopoki nie miesci sie z prawej strony na ekranie
-			{
+			// cut text from the right as long as it doesn't fit to the screen
+			while(Font.getDefaultFont().stringWidth(textTmp) > screenWidth - 32) {
 				textTmp = textTmp.substring(0, textTmp.length() - 1);
 				textRightCut = true;
 			}
@@ -789,35 +766,33 @@ public class MainCanvas extends GameCanvas implements Runnable
 			g.fillRect(screenWidth - 16, 16 + line*(fontHeight + 3), 11, fontHeight);
 			//g.fillRect(5, 16 + line*(fontHeight + 3), 11, fontHeight);
 			
-			if(line == 0)
-			{
+			if(line == 0) {
 				if((textRightCut == false) && (waitTimeText0 == 0))	// jesli tekst przewinal sie do konca
 					waitTimeText0 = SCROLL_TIME_WAIT;
 				
 				if(waitTimeText0 == 0)
 					textPos0 += 2;		// przewiniecie tekstu
-				else		// jesli tekst ma byc wyswietlany w miejscu bez przesuwania
-				{
+				// if text is going to be displayed statically (without scrolling it)
+				else {
 					waitTimeText0--;
-					if((waitTimeText0 == 0) && (textPos0 != 0))		// w przypadku skonczenia czasu oczekiwania ma sie rozpoczac przewijanie od nowa
-					{
+					// if wait time has ended, start scrolling from the beginning
+					if((waitTimeText0 == 0) && (textPos0 != 0)) {
 						waitTimeText0 = SCROLL_TIME_WAIT;
 						textPos0 = 0;
 					}
 				}
 			}
-			else if(line == 1)
-			{
+			else if(line == 1) {
 				if((textRightCut == false) && (waitTimeText1 == 0))	// jesli tekst przewinal sie do konca
 					waitTimeText1 = SCROLL_TIME_WAIT;
 				
 				if(waitTimeText1 == 0)
 					textPos1 += 2;		// przewiniecie tekstu
-				else		// jesli tekst ma byc wyswietlany w miejscu bez przesuwania
-				{
+				// if text is going to be displayed statically (without scrolling it)
+				else {
 					waitTimeText1--;
-					if((waitTimeText1 == 0) && (textPos1 != 0))		// w przypadku skonczenia czasu oczekiwania ma sie rozpoczac przewijanie od nowa
-					{
+					// if wait time has ended, start scrolling from the beginning
+					if((waitTimeText1 == 0) && (textPos1 != 0)) {
 						waitTimeText1 = SCROLL_TIME_WAIT;
 						textPos1 = 0;
 					}
@@ -833,8 +808,7 @@ public class MainCanvas extends GameCanvas implements Runnable
 	 * @author 			Kuba Odias
 	 * @version 		0.5
 	 */
-	public void reconnectToServer()
-	{
+	public void reconnectToServer() {
 		bluetoothPlayer.closeConnection();		// wystarczy sie rozlaczyc, reszta zostanie wykonana w metodzie run klasy BluetoothPlayer
 	}
 	
@@ -846,8 +820,7 @@ public class MainCanvas extends GameCanvas implements Runnable
 	 * @param screenSelectedItemIndex	Indeks wybranego elementu na wyswietlaczu
 	 * @param screenNumberOfItems		Liczba elementow wyswietlonych na wyswietlaczu
 	 */
-	public void showMediaLibrary(Graphics g, BluetoothPlayer player, int screenSelectedItemIndex, int screenNumberOfItems)
-	{
+	public void showMediaLibrary(Graphics g, BluetoothPlayer player, int screenSelectedItemIndex, int screenNumberOfItems) {
 		int color = g.getColor();	// przechowanie uzywanego koloru
 		int textPos = 0;
 		String text;
@@ -855,76 +828,29 @@ public class MainCanvas extends GameCanvas implements Runnable
 		g.setColor(255, 255, 255);	// biala czcionka
 		
 		for(int i = 0; i < screenNumberOfItems; i++) {
-			
-			//if (bluetoothPlayer.getMediaLibrary().mediaLibraryItems != null)
-			//{
-				/*drawText(g, "ile: " + bluetoothPlayer.getMediaLibrary().mediaLibraryItems.size(), 0);
-			flushGraphics();
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}*
-			
-			MediaLibrary.Track track = (MediaLibrary.Track)bluetoothPlayer.getMediaLibrary().mediaLibraryItems.get(new Integer(1));
-			
-			String.valueOf(bluetoothPlayer.getMediaLibrary().bytes);
-			}
-			
-			drawText(g, "ind:" + (bluetoothPlayer.getMediaLibrary().getMediaLibrarySelectedItem() - screenSelectedItemIndex + i), 2);
-			flushGraphics();
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}*/
-			
 			text = bluetoothPlayer.getMediaLibrary().getItem(bluetoothPlayer.getMediaLibrary().getMediaLibrarySelectedItem() - 
 					screenSelectedItemIndex + i, g);
-			/*if(text == null)
-			drawText(g, "ind:" + (bluetoothPlayer.getMediaLibrary().getMediaLibrarySelectedItem() - screenSelectedItemIndex + i), 2);
-			flushGraphics();
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			*/
 			
-			
-			if (text != null)
-			{		
-				/*drawText(g, "t:" + text, 0);
-				flushGraphics();
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}*/
+			if (text != null) {		
 				// jesli zmienil sie wybrany tekst
-				if ((screenSelectedItemIndex == i) && (text.equals(mediaLibraryLastText) == false))
-				{
+				if ((screenSelectedItemIndex == i) && (text.equals(mediaLibraryLastText) == false)) {
 					mediaLibraryLastText = text;
 					mediaLibraryTextPos = 0;
 					mediaLibraryWaitTimeText = SCROLL_TIME_WAIT;
 				}
 				textPos = mediaLibraryTextPos;
 				
-				if(Font.getDefaultFont().stringWidth(text) <= screenWidth - 32)		// jesli caly tekst miesci sie na ekranie
-				{
+				// if whole text can be displayed at once
+				if(Font.getDefaultFont().stringWidth(text) <= screenWidth - 32) {
 					g.setColor(255, 255, 255);	// biala czcionka
 					g.drawString(text, 10, i*(fontHeight + 5) + 8, Graphics.TOP | Graphics.LEFT);
 				}
-				else	// jesli tekst nie miesci sie na ekranie
-				{
+				// if text doesn't fit into the screen
+				else {
 					String leftTextTmp = "";
 					int j = 0;
 					
-					//ucinanie tekstu dopoki nie miesci sie z lewej strony na ekranie (tylko dla zaznaczonego tekstu)
+					// cut text from the left as long as it doesn't fit to the screen (only for selected item)
 					if (screenSelectedItemIndex == i)
 						while(Font.getDefaultFont().stringWidth(leftTextTmp) < textPos) {		
 							leftTextTmp = text.substring(0, ++j); 
@@ -933,8 +859,8 @@ public class MainCanvas extends GameCanvas implements Runnable
 					String textTmp = text.substring(j, text.length());
 					
 					boolean textRightCut = false;
-					while(Font.getDefaultFont().stringWidth(textTmp) > screenWidth - 24)	// ucinanie tekstu dopoki nie miesci sie z prawej strony na ekranie
-					{
+					// cut text from the right as long as it doesn't fit to the screen 
+					while(Font.getDefaultFont().stringWidth(textTmp) > screenWidth - 24) {
 						textTmp = textTmp.substring(0, textTmp.length() - 1);
 						textRightCut = true;
 					}
@@ -945,18 +871,17 @@ public class MainCanvas extends GameCanvas implements Runnable
 					g.setColor(BACKGROUND_COLOR);	// zamazanie tekstu po bokach
 					g.fillRect(screenWidth - 10, i*(fontHeight + 5) + 8, 5, fontHeight);
 					
-					if(screenSelectedItemIndex == i)
-					{
+					if(screenSelectedItemIndex == i) {
 						if((textRightCut == false) && (mediaLibraryWaitTimeText == 0))	// jesli tekst przewinal sie do konca
 							mediaLibraryWaitTimeText = SCROLL_TIME_WAIT;
 						
 						if(mediaLibraryWaitTimeText == 0)
 							mediaLibraryTextPos += 2;		// przewiniecie tekstu
-						else		// jesli tekst ma byc wyswietlany w miejscu bez przesuwania
-						{
+						// if text is going to be displayed statically (without scrolling it)
+						else {
 							mediaLibraryWaitTimeText--;
-							if((mediaLibraryWaitTimeText == 0) && (mediaLibraryTextPos != 0))		// w przypadku skonczenia czasu oczekiwania ma sie rozpoczac przewijanie od nowa
-							{
+							// if wait time has ended, start scrolling from the beginning
+							if((mediaLibraryWaitTimeText == 0) && (mediaLibraryTextPos != 0)) {
 								mediaLibraryWaitTimeText = SCROLL_TIME_WAIT;
 								mediaLibraryTextPos = 0;
 							}

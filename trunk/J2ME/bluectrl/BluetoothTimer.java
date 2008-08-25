@@ -10,8 +10,7 @@ import java.util.TimerTask;
  * @author Kuba Odias
  * @version 0.9
  */
-public class BluetoothTimer extends TimerTask
-{
+public class BluetoothTimer extends TimerTask {
 	/** Zmienna przechowujaca aktualny czas trwania utworu */
 	private int currentTime;
 	
@@ -22,8 +21,7 @@ public class BluetoothTimer extends TimerTask
 	 * @author Kuba Odias
 	 * @version 0.9
 	 */
-	public BluetoothTimer()
-	{
+	public BluetoothTimer() {
 		currentTime = -1;
 	}
 	
@@ -31,8 +29,7 @@ public class BluetoothTimer extends TimerTask
 	 * @author Kuba Odias
 	 * @version 0.2
 	 */
-	public void run() 
-	{
+	public void run() {
 		currentTime += 1;
 	}
 	
@@ -41,8 +38,7 @@ public class BluetoothTimer extends TimerTask
 	 * @version 1.0
 	 * @return 	Wartosc zmiennej currentTime
 	 */
-	public int getCurrentTime()
-	{
+	public int getCurrentTime() {
 		return currentTime;
 	}
 	
@@ -51,8 +47,7 @@ public class BluetoothTimer extends TimerTask
 	 * @version 1.0
 	 * @param t 	Nowa wartosc zmiennej currentTime
 	 */
-	public void setCurrentTime(int t)
-	{
+	public void setCurrentTime(int t) {
 		currentTime = t;
 	}
 	
@@ -61,8 +56,7 @@ public class BluetoothTimer extends TimerTask
 	 * @version 1.0
 	 * @return 	Wartosc czasu trwania utworu skonwertowany do stringa ze zmiennej currentTime
 	 */
-	public String getCurrentTimeString()
-	{
+	public String getCurrentTimeString() {
 		String ret = "";
 		
 		if(currentTime == -1)	// jesli timer jest wylaczony
@@ -82,8 +76,7 @@ public class BluetoothTimer extends TimerTask
 	 * @author Kuba Odias
 	 * @version 1.0
 	 */
-	public void startTimer()
-	{
+	public void startTimer() {
 		if(timer != null)
 			timer.cancel();		// anulowanie wszystkich zadan, ktore mialyby sie wykonac
 		
@@ -95,13 +88,11 @@ public class BluetoothTimer extends TimerTask
 	 * @author Kuba Odias
 	 * @version 1.0
 	 */
-	public void pauseTimer()
-	{
-		try
-		{
+	public void pauseTimer() {
+		try {
 			if(timer != null)
 				timer.cancel();		// anulowanie wszystkich zadan, ktore mialyby sie wykonac
-		}
+		} 
 		catch(IllegalStateException ise) { }
 		
 		timer = null;
@@ -111,13 +102,11 @@ public class BluetoothTimer extends TimerTask
 	 * @author Kuba Odias
 	 * @version 1.0
 	 */
-	public void stopTimer()
-	{
-		try
-		{
+	public void stopTimer() {
+		try {
 			if(timer != null)
 				timer.cancel();		// anulowanie wszystkich zadan, ktore mialyby sie wykonac
-		}
+		} 
 		catch(IllegalStateException ise) { }
 		
 		timer = null;
@@ -129,8 +118,7 @@ public class BluetoothTimer extends TimerTask
 	 * @version 1.0
 	 * @return	<code>true</code> jesli zegar jest uruchomiony, <code>false</code> w przeciwnym razie
 	 */
-	public boolean isRunning()
-	{
+	public boolean isRunning() {
 		if(timer == null)
 			return false;
 		

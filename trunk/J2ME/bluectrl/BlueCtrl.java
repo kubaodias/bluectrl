@@ -13,8 +13,7 @@ import javax.microedition.midlet.MIDletStateChangeException;
  * @author Kuba Odias
  * @version 0.9
  */
-public class BlueCtrl extends MIDlet implements CommandListener 
-{
+public class BlueCtrl extends MIDlet implements CommandListener {
 
 	/*******************************VARIABLES*************************************/
 	
@@ -48,8 +47,7 @@ public class BlueCtrl extends MIDlet implements CommandListener
 	 * @author Kuba Odias
 	 * @version 1.0
 	 */
-	public BlueCtrl() 
-	{
+	public BlueCtrl() {
 		myDisplay = Display.getDisplay(this);
 	}
 	
@@ -58,8 +56,7 @@ public class BlueCtrl extends MIDlet implements CommandListener
 	 * @version 1.0
 	 * @throws MIDletStateChangeException
 	 */
-	protected void destroyApp(boolean arg0) throws MIDletStateChangeException 
-	{
+	protected void destroyApp(boolean arg0) throws MIDletStateChangeException {
 		mainCanvas.destroy();
 	}
 
@@ -67,8 +64,7 @@ public class BlueCtrl extends MIDlet implements CommandListener
 	 * @author Kuba Odias
 	 * @version 1.0
 	 */
-	protected void pauseApp() 
-	{
+	protected void pauseApp() {
 		mainCanvas.destroy();
 	}
 
@@ -77,17 +73,14 @@ public class BlueCtrl extends MIDlet implements CommandListener
 	 * @version 1.0
 	 * @throws MIDletStateChangeException
 	 */
-	protected void startApp() throws MIDletStateChangeException 
-	{
-		if(!isApplicationStarted)	// blok wywolywany tylko przy pierwszym starcie MIDletu
-		{	
+	protected void startApp() throws MIDletStateChangeException {
+		// executed only during first start of the MIDlet
+		if(!isApplicationStarted) {	
 			isApplicationStarted = true;
-			try 
-			{
+			try {
 				mainCanvas = new MainCanvas();
 			} 
-			catch (IOException e) 
-			{
+			catch (IOException e) {
 				SoundPlayer soundPlayer = new SoundPlayer();
 				new Thread(soundPlayer).start();
 				soundPlayer.play(SoundPlayer.ERROR_SOUND);
@@ -110,18 +103,14 @@ public class BlueCtrl extends MIDlet implements CommandListener
 	 * @author Kuba Odias
 	 * @version 1.0
 	 */
-	public void commandAction(Command cmd, Displayable arg1) 
-	{
-		if (cmd == exitCommand) 
-		{
-            try 
-            {
+	public void commandAction(Command cmd, Displayable arg1) {
+		if (cmd == exitCommand) {
+            try {
                 destroyApp(false);
                 notifyDestroyed();
                 mainCanvas.destroy();
             } 
-            catch(Exception e) 
-            {
+            catch(Exception e) {
             	SoundPlayer soundPlayer = new SoundPlayer();
 				new Thread(soundPlayer).start();
 				soundPlayer.play(SoundPlayer.ERROR_SOUND);
@@ -129,8 +118,7 @@ public class BlueCtrl extends MIDlet implements CommandListener
                 e.printStackTrace();
             }
         }
-		else if(cmd == mediaLibraryCommand)
-		{
+		else if(cmd == mediaLibraryCommand) {
 			mainCanvas.setDisplayedScreen(MainCanvas.MEDIA_LIBRARY_LOADING);
 			removeAllCommands(mainCanvas);
 			
@@ -139,16 +127,14 @@ public class BlueCtrl extends MIDlet implements CommandListener
 			
 			mainCanvas.getBluetoothPlayer().getPlaylist();
 		}
-		else if(cmd == backCommand)
-		{
+		else if(cmd == backCommand) {
 			removeAllCommands(mainCanvas);
 			mainCanvas.addCommand(mediaLibraryCommand);
 			mainCanvas.addCommand(reconnectCommand);
 			mainCanvas.addCommand(exitCommand);
 			mainCanvas.setDisplayedScreen(MainCanvas.PLAYER_SCREEN);
 		}
-		else if(cmd == reconnectCommand)
-		{
+		else if(cmd == reconnectCommand) {
 			mainCanvas.reconnectToServer();
 		}
 	}
@@ -158,8 +144,7 @@ public class BlueCtrl extends MIDlet implements CommandListener
 	 * @version 1.0
 	 * @param c		Plotno, z ktorego zostana usuniete wszystkie elementy
 	 */
-	public void removeAllCommands(GameCanvas c)
-	{
+	public void removeAllCommands(GameCanvas c) {
 		mainCanvas.removeCommand(mediaLibraryCommand);
 		mainCanvas.removeCommand(reconnectCommand);
 		mainCanvas.removeCommand(backCommand);
