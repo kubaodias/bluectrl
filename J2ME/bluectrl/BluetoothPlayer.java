@@ -24,8 +24,7 @@ import javax.microedition.io.StreamConnection;
  * @author Kuba Odias
  * @version 0.7
  */
-public class BluetoothPlayer implements Runnable, DiscoveryListener
-{
+public class BluetoothPlayer implements Runnable, DiscoveryListener {
 	/*******************************VARIABLES*************************************/
 	
 	/** Urzadzenie Bluetooth znajdujace sie w telefonie */
@@ -162,8 +161,7 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener
 	 * @author Kuba Odias
 	 * @version 1.0
 	 */
-	public BluetoothPlayer()
-	{
+	public BluetoothPlayer() {
 		bluetoothError = false;
 		isConnectedToServer = false;
 		inquiryStarted = false;
@@ -181,8 +179,7 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener
 	 * @version 1.0 
 	 * @return
 	 */
-	public boolean getIsConnectedToServer()
-	{
+	public boolean getIsConnectedToServer() {
 		return isConnectedToServer;
 	}
 	
@@ -191,8 +188,7 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener
 	 * @version 1.0 
 	 * @return	Adres urzadzenia z ktorym sie laczymy
 	 */
-	public String getRemoteDeviceBluetoothAddress()
-	{
+	public String getRemoteDeviceBluetoothAddress() {
 		return remoteDeviceBluetoothAddress;
 	}
 	
@@ -201,8 +197,7 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener
 	 * @version 1.0 
 	 * @return	Nazwa urzadzenia z ktorym sie laczymy
 	 */
-	public String getRemoteDeviceFriendlyName()
-	{
+	public String getRemoteDeviceFriendlyName() {
 		return remoteDeviceFriendlyName;
 	}
 	
@@ -211,8 +206,7 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener
 	 * @version 1.0 
 	 * @return	Adres urzadzenia za pomoca ktorego sie laczymy (Bluetooth w telefonie)
 	 */
-	public String getLocalDeviceBluetoothAddress()
-	{
+	public String getLocalDeviceBluetoothAddress() {
 		return localDeviceBluetoothAddress;
 	}
 	
@@ -221,8 +215,7 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener
 	 * @version 1.0 
 	 * @return	Nazwa urzadzenia za pomoca ktorego sie laczymy (Bluetooth w telefonie)
 	 */
-	public String getLocalDeviceFriendlyName()
-	{
+	public String getLocalDeviceFriendlyName() {
 		return localDeviceFriendlyName;
 	}
 	
@@ -231,8 +224,7 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener
 	 * @version 1.0  
 	 * @return	Wartosc zmiennej informujacej czy wystapil blad spowodowany przez Bluetooth
 	 */
-	public boolean getBluetoothError()
-	{
+	public boolean getBluetoothError() {
 		return bluetoothError;
 	}
 	
@@ -241,8 +233,7 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener
 	 * @version 1.0  
 	 * @return	Nowa wartosc zmiennej informujacej czy wystapil blad spowodowany przez Bluetooth
 	 */
-	public void setBluetoothError(boolean b)
-	{
+	public void setBluetoothError(boolean b) {
 		bluetoothError = b;
 	}
 	
@@ -251,8 +242,7 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener
 	 * @version 1.0
 	 * @return	Zmienna informujaca czy odpytywanie urzadzen zostalo juz zakonczone 
 	 */
-	public boolean getInquiryStarted()
-	{
+	public boolean getInquiryStarted() {
 		return inquiryStarted;
 	}
 	
@@ -261,8 +251,7 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener
 	 * @version 1.0
 	 * @return	Wartosc zmiennej przechowujacej tytul odtwarzanego utworu 
 	 */
-	public String getTitle()
-	{
+	public String getTitle() {
 		return title;
 	}
 	
@@ -271,8 +260,7 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener
 	 * @version 1.0
 	 * @return	Wartosc zmiennej przechowujacej nazwe artysty, ktorego utwor jest w danej chwili odtwarzany
 	 */
-	public String getArtist()
-	{
+	public String getArtist() {
 		return artist;
 	}
 	
@@ -281,8 +269,7 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener
 	 * @version 1.0
 	 * @return	Wartosc zmiennej przechowujacej calkowity czas trwania utworu
 	 */
-	public int getTotalTime()
-	{
+	public int getTotalTime() {
 		return totalTime;
 	}
 	
@@ -291,8 +278,7 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener
 	 * @version 1.0
 	 * @return	Wartosc zmiennej przechowujacej aktualny czas trwania utworu
 	 */
-	public int getCurrentTime()
-	{
+	public int getCurrentTime() {
 		return bluetoothTimer.getCurrentTime();
 	}
 	
@@ -301,8 +287,7 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener
 	 * @version 1.0
 	 * @return	Wartosc zmiennej przechowujacej aktualny czas trwania utworu
 	 */
-	public String getCurrentTimeString()
-	{
+	public String getCurrentTimeString() {
 		return bluetoothTimer.getCurrentTimeString();
 	}
 	
@@ -311,8 +296,7 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener
 	 * @version 1.0
 	 * @return	Wartosc zmiennej przechowujacej glosnosc dzwieku
 	 */
-	public int getVolumeLevel()
-	{
+	public int getVolumeLevel() {
 		return volumeLevel;
 	}
 	
@@ -321,8 +305,7 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener
 	 * @version 1.0
 	 * @return	Wartosc zmiennej przechowujacej stan odtwarzacza
 	 */
-	public String getPlayingState()
-	{
+	public String getPlayingState() {
 		String state = playingState;
 		playingState = null;
 		
@@ -334,8 +317,7 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener
 	 * @version 1.0
 	 * @return	Wartosc zmiennej informujacej o zmianie stanu odtwarzacza
 	 */
-	public boolean getStateChanged()
-	{
+	public boolean getStateChanged() {
 		boolean state = stateChanged;
 		stateChanged = false;
 		
@@ -347,8 +329,7 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener
 	 * @version	1.0
 	 * @return		Wartosc zmiennej bluetoothTimer
 	 */
-	public BluetoothTimer getBluetoothTimer()
-	{
+	public BluetoothTimer getBluetoothTimer() {
 		return bluetoothTimer;
 	}
 	
@@ -357,8 +338,7 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener
 	 * @version	1.0
 	 * @return		Wartosc zmiennej mediaLibrary
 	 */
-	public MediaLibrary getMediaLibrary()
-	{
+	public MediaLibrary getMediaLibrary() {
 		return mediaLibrary;
 	}
 	
@@ -385,8 +365,7 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener
 	 * @version 1.0
 	 * @param	Identyfikator nowej komendy
 	 */
-	public void addCommandToProcess(String cmd)
-	{
+	public void addCommandToProcess(String cmd) {
 		commandVector.addElement(cmd);
 	}
 	
@@ -394,61 +373,51 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener
 	 * @author Kuba Odias
 	 * @version 0.7
 	 */
-	public void run() 
-	{	
-		try 
-		{
+	public void run() {	
+		try { 
 			localDevice = LocalDevice.getLocalDevice();
 			agent = localDevice.getDiscoveryAgent();
 		} 
-		catch (BluetoothStateException e) 
-		{
+		catch (BluetoothStateException e) {
 			closeConnection();
 			e.printStackTrace();
 		}
 
-		while (isBluetoothOn())
-		{	
+		while (isBluetoothOn()) {	
 			findBlueCtrlServer();
 			
-			while (inquiryStarted)	// czekanie dopoki trwa wyszukiwanie urzadzen i serwisow
-			{
-				try 	// uspienie watku na 200 milisekund
-				{
-					Thread.sleep(100);
+			// do as long as devices and services are being discovered
+			while (inquiryStarted) {
+				try { 	
+					Thread.sleep(100);	// this thread sleeps for 100 ms
 				} 
-				catch (InterruptedException e) 
-				{
+				catch (InterruptedException e) {
 					e.printStackTrace();
 				}
 			}
 			
-			while (isConnectedToServer)	// glowna petla przetwarzajaca dane
-			{
+			// main loop
+			while (isConnectedToServer) {
 				if (sleepTime < 100)
 					sleepTime+=10;
 				else if(sleepTime < 200)
 					sleepTime+=20;
 				receiveCommands();
+				// if checked for existing incoming commands, maybe some commands have to be sent
+				sendCommands();
 				
-				sendCommands();	// jesli sprawdzono czy istnieja dane do odebrania to bycmoze istnieja jakies dane do wyslania
-				
-				try 	// uspienie watku na czas sleepTime
-				{
-					Thread.sleep(sleepTime);
+				try {
+					Thread.sleep(sleepTime);	// this thread sleeps for sleepTime
 				} 
-				catch (InterruptedException e) 
-				{
+				catch (InterruptedException e) {
 					e.printStackTrace();
 				}
 			}
 			
-			try 	// uspienie watku na 4 sekundy w przypadku rozlaczenia
-			{
-				Thread.sleep(4000);
+			try {
+				Thread.sleep(4000);	// this thread sleeps for 4 seconds in case of disconnection
 			} 
-			catch (InterruptedException e) 
-			{
+			catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		
@@ -461,22 +430,17 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener
 	 * @version 		1.0
 	 * @return	<code>true</code> jesli Bluetooth jest wlaczony, <code>false</code> w przeciwnym razie
 	 */
-	public boolean isBluetoothOn()
-	{
-		if(localDevice == null)
-		{
-			try 
-			{
+	public boolean isBluetoothOn() {
+		if(localDevice == null) {
+			try {
 				localDevice = LocalDevice.getLocalDevice();
 			} 
-			catch (BluetoothStateException e) 
-			{
+			catch (BluetoothStateException e) {
 				return false;
 			}
 		}
 		
-		if(localDevice.getBluetoothAddress().equals(""))
-		{
+		if(localDevice.getBluetoothAddress().equals("")) {
 			closeConnection();
 			return false;
 		}
@@ -490,10 +454,8 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener
 	 * @author Kuba Odias
 	 * @version 0.8
 	 */
-	public void findBlueCtrlServer()
-	{
-		try 
-		{				
+	public void findBlueCtrlServer() {
+		try {				
 			bluetoothError = false;
 			playingState = null;
 			stateChangedByServer = true;
@@ -509,8 +471,7 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener
 	
 			inquiryStarted = agent.startInquiry(DiscoveryAgent.GIAC, this);
 		} 
-		catch (BluetoothStateException e) 
-		{
+		catch (BluetoothStateException e) {
 			inquiryStarted = false;
 			closeConnection();
 		}
@@ -520,41 +481,34 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener
 	 * @author Kuba Odias
 	 * @version 0.7
 	 */
-	public void closeConnection()
-	{
+	public void closeConnection() {
 		isConnectedToServer = false;
 		bluetoothError = true;
 		inquiryStarted = false;
-		try
-		{
-			if(bluetoothConnection != null)
-			{
+		try {
+			if(bluetoothConnection != null) {
 				bluetoothConnection.close();
 				bluetoothConnection = null;
 			}
 			
-			if(out != null)
-			{
+			if(out != null) {
 				out.close();
 				out = null;
 			}
 			
-			if(in != null)
-			{
+			if(in != null) {
 				in.close();
 				in = null;
 			}
 			
-			if(agent != null)
-			{
+			if(agent != null) {
 				agent.cancelInquiry(this);
 				agent = null;
 			}
 			
 			localDevice = null;
 		} 
-		catch (IOException e) 
-		{
+		catch (IOException e) {
 			bluetoothConnection = null;
 		}
 	}
@@ -565,8 +519,7 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener
 	 * @param remoteDevice	Znalezione urzadzenie
 	 * @param deviceClass	Klasa znalezionego urzadzenia
 	 */
-	public void deviceDiscovered(RemoteDevice remoteDevice, DeviceClass deviceClass) 
-	{      
+	public void deviceDiscovered(RemoteDevice remoteDevice, DeviceClass deviceClass) {      
 		discoveredDevices.addElement(remoteDevice);
 	}
 
@@ -575,41 +528,34 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener
 	 * @version 0.9
 	 * @param type		Typ zadania, ktore zostalo wykonane: INQUIRY_COMPLETED, INQUIRY_TERMINATED lub INQUIRY_ERROR     
 	 */
-	public void inquiryCompleted(int type)
-	{
+	public void inquiryCompleted(int type) {
         UUID[] uuidSet = new UUID[1];
         uuidSet[0] = new UUID(0x1101);	// tylko serwisy btspp
         int attributes[] = {0x100};
        
-        if (type == DiscoveryListener.INQUIRY_COMPLETED)
-        {
+        if (type == DiscoveryListener.INQUIRY_COMPLETED) {
 	        int n = discoveredDevices.size();
 
-	        if(n > 0)
-	        {
-	            for (int i = 0; i < n; i++)
-	            {
+	        if(n > 0) {
+	            for (int i = 0; i < n; i++) {
 	            	RemoteDevice rd = (RemoteDevice) discoveredDevices.elementAt(i);
 	                
-                	try
-                	{
+                	try {
                 		int transID = agent.searchServices(attributes, uuidSet, rd, this);
                 		devicesTransIDs.addElement(new Integer(transID));	// musi byc dodawany obiekt klasy Object
-                	}
-                	catch (BluetoothStateException e1) 
-                    {
+                	} 
+                	catch (BluetoothStateException e1) {
      					e1.printStackTrace();
      				}
                 }
 	        } 
-	        else	// nie znaleziono zadnych urzadzen
-	        {
+	        // no devices were found
+	        else {
 	        	inquiryStarted = false;
 	        	bluetoothError = true;
 	        }
         }
-        else
-        {
+        else {
         	inquiryStarted = false;
         	bluetoothError = true;
         }
@@ -621,16 +567,14 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener
 	 * @param transID		Identyfikator wyszukiwania serwisow
 	 * @param responseCode	Kod zwrocony przez DiscoveryListener
 	 */
-	public void serviceSearchCompleted(int transID, int responseCode) 
-	{
+	public void serviceSearchCompleted(int transID, int responseCode) {
 		devicesTransIDs.removeElement(new Integer(transID));
 		
-		if(devicesTransIDs.size() == 0)
-		{
+		if(devicesTransIDs.size() == 0) {
 			inquiryStarted = false;	// zakonczono wyszukiwanie serwisow
 			
-			if (bluetoothConnection == null)	// jesli klient nie polaczyl sie z serwisem BlueCtrl
-			{
+			// if client didn't connect to BlueCtrl server
+			if (bluetoothConnection == null) {
 				bluetoothError = true;
 			}
 		}
@@ -642,44 +586,36 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener
 	 * @param transID	Identyfikator wyszukiwania serwisow
 	 * @param sr		Tablica zawierajaca znalezione serwisy
 	 */
-	public void servicesDiscovered(int transID, ServiceRecord[] sr) 
-	{
+	public void servicesDiscovered(int transID, ServiceRecord[] sr) {
 		String bluetoothURLString;
 
-		for(int i = 0; (i < sr.length) && (isConnectedToServer == false); i++)
-		{
+		for(int i = 0; (i < sr.length) && (isConnectedToServer == false); i++) {
 			DataElement elem = sr[i].getAttributeValue(0x100);
 		
-	        if (elem != null)
-	        {        
-            	if ((elem.getDataType() == DataElement.STRING) && (elem.getValue().toString().compareTo(BLUE_CTRL_SERVICE_NAME) == 0))
-            	{	
+	        if (elem != null) {        
+            	if ((elem.getDataType() == DataElement.STRING) && 
+            			(elem.getValue().toString().compareTo(BLUE_CTRL_SERVICE_NAME) == 0)) {	
     				bluetoothURLString = sr[i].getConnectionURL(ServiceRecord.AUTHENTICATE_NOENCRYPT, false);
     				
-    				if(authenticateServer(bluetoothURLString) == false)		// proba autentykacji urzadzenia
-    				{
-    					try
-    					{
-    						if(bluetoothConnection != null)
-    						{
+    				// attempt to authenticate the server
+    				if(authenticateServer(bluetoothURLString) == false) {
+    					try {
+    						if(bluetoothConnection != null) {
     							bluetoothConnection.close();
     							bluetoothConnection = null;
     						}
     						
-    						if(out != null)
-    						{
+    						if(out != null) {
     							out.close();
     							out = null;
     						}
     						
-    						if(in != null)
-    						{
+    						if(in != null) {
     							in.close();
     							in = null;
     						}
-    					}
-    					catch (IOException e) 
-    					{
+    					} 
+    					catch (IOException e) {
     						bluetoothConnection = null;
     						out = null;
     					}
@@ -695,14 +631,11 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener
 	 * @param data	Dane, ktore maja zostac wyslane
 	 * @return		<code>true</code> jesli wyslanie danych powiodlo sie, <code>false</code> w przeciwnym razie
 	 */
-	public boolean bluetoothSendData(String data)
-	{
+	public boolean bluetoothSendData(String data) {
 		String ack;
 		
-		if(bluetoothConnection != null)
-		{
-			try 
-			{	
+		if(bluetoothConnection != null) {
+			try {	
 				out.write(data.length());
 				out.write(data.getBytes());
 				out.flush();
@@ -719,12 +652,11 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener
 
 				return false;
 			} 
-			catch (IOException e) 
-			{
+			catch (IOException e) {
 				closeConnection();
 				return false;
 			}
-		}
+		} 
 		else
 			return false;
 	}
@@ -735,12 +667,9 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener
 	 * @param data	Potwierdzenie, ktore ma zostac wyslane
 	 * @return		<code>true</code> jesli wyslanie danych powiodlo sie, <code>false</code> w przeciwnym razie
 	 */
-	public boolean bluetoothSendAcknowledge(String data)
-	{
-		if(bluetoothConnection != null)
-		{
-			try 
-			{	
+	public boolean bluetoothSendAcknowledge(String data) {
+		if(bluetoothConnection != null) {
+			try {	
 				out.write(data.length());
 				out.write(data.getBytes());
 				out.flush();
@@ -749,8 +678,7 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener
 				else if(sleepTime > 20)
 					sleepTime-=10;
 			} 
-			catch (IOException e) 
-			{
+			catch (IOException e) {
 				closeConnection();
 				return false;
 			}
@@ -766,17 +694,14 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener
 	 * @version 0.8
 	 * @return	Odebrane dane, lub null w razie bledu 
 	 */
-	public String bluetoothReceiveData()
-	{
+	public String bluetoothReceiveData() {
 		String ret = null;
 		int length = -1;
 		
-		try 
-		{		
+		try {		
 			length = in.read();
 			
-	        if (length <= 0) 
-	        {
+	        if (length <= 0) {
 	        	bluetoothSendAcknowledge("ERROR");
 	        	return null;
 	        }
@@ -784,12 +709,10 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener
 	        byte[] input = new byte[length];
 	        length = 0;
 
-	        while (length != input.length) 
-	        {
+	        while (length != input.length) {
 	            int n = in.read(input, length, input.length - length);
 	            
-	            if(n == -1) 
-	            {
+	            if(n == -1) {
 	            	bluetoothSendAcknowledge("ERROR");
 	            	return null;
 	            }
@@ -808,8 +731,7 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener
 			else if(sleepTime > 20)
 				sleepTime-=10;
 		} 
-		catch (IOException e) 
-		{
+		catch (IOException e) {
 			bluetoothSendAcknowledge("ERROR");
 			closeConnection();
 			return null;
@@ -824,30 +746,25 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener
 	 * @version 0.8
 	 * @return	Odebrane potwierdzenie, lub null w razie bledu 
 	 */
-	public String bluetoothReceiveAcknowledge()
-	{
+	public String bluetoothReceiveAcknowledge() {
 		String ret = null;
 		int length = -1;
 		
-		try 
-		{		
+		try {		
 			while(in.available() == 0) {}
 			length = in.read();
 
-	        if (length <= 0) 
-	        {
+	        if (length <= 0) {
 	        	return null;
 	        }
 	        
 	        byte[] input = new byte[length];
 	        length = 0;
 
-	        while (length != input.length) 
-	        {
+	        while (length != input.length) {
 	            int n = in.read(input, length, input.length - length);
 	            
-	            if(n == -1) 
-	            {
+	            if(n == -1) {
 	            	return null;
 	            }
 	            length += n;
@@ -860,8 +777,7 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener
 			else if(sleepTime > 20)
 				sleepTime-=10;
 		} 
-		catch (IOException e) 
-		{
+		catch (IOException e) {
 			e.printStackTrace();
 			return null;
 		}
@@ -876,17 +792,12 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener
 	 * @param 		urlString Link URL, z ktory sluzy do polaczenia dwoch urzadzen
 	 * @return 	<code>true</code> jesli autoryzacja powiodla sie, <code>false</code> w przeciwnym razie
 	 */
-	public boolean authenticateServer(String urlString)
-	{
-		
-		if (urlString != null) 
-		{
-			try 
-			{
+	public boolean authenticateServer(String urlString) {
+		if (urlString != null) {
+			try {
 				bluetoothConnection = (StreamConnection) Connector.open(urlString); // polaczenie z serwerem
 				
-				if(bluetoothConnection != null)
-				{
+				if(bluetoothConnection != null) {
 					
 					out = bluetoothConnection.openOutputStream();
 					in = bluetoothConnection.openInputStream();
@@ -895,25 +806,21 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener
 						return false;
 	                
 	        		String msg = bluetoothReceiveData();
-					if((msg != null) && (msg.equals("CONNECT_ACK")))
-					{
+					if((msg != null) && (msg.equals("CONNECT_ACK"))) {
 						isConnectedToServer = true;
 					}
 					else
 						closeConnection();
 				}
-				else
-				{
+				else {
 					return false;
 				}
 			} 
-			catch (IOException e) 
-			{
+			catch (IOException e) {
 				return false;
 			}
 		} 
-		else 
-		{
+		else {
 			return false;
 		}
 		return true;

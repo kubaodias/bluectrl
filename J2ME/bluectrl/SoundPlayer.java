@@ -13,8 +13,7 @@ import javax.microedition.media.Player;
  * @author Kuba Odias
  * @version 1.0
  */
-public class SoundPlayer implements Runnable
-{
+public class SoundPlayer implements Runnable {
 	/**********************************VARIABLES**********************************/
 	
 	/** Obiekt klasy Player odpowiedzialny za zaladowanie i odtwarzanie dzwieku bledu */
@@ -55,8 +54,7 @@ public class SoundPlayer implements Runnable
 	 * @version 1.0
 	 * @param fileID	Kod dzwieku, ktory ma zostac odtworzony
 	 */
-	public SoundPlayer()
-	{		
+	public SoundPlayer() {		
 		isMuted = true;
 		new Thread(this).start();
 	}
@@ -65,10 +63,8 @@ public class SoundPlayer implements Runnable
 	 * @author Kuba Odias
 	 * @version 1.0
 	 */
-	public void run() 
-	{
-		try
-		{
+	public void run() {
+		try {
 			InputStream isError = getClass().getResourceAsStream("/res/error.wav");
 			InputStream isClick = getClass().getResourceAsStream("/res/click.wav");
 			InputStream isPopup = getClass().getResourceAsStream("/res/popup.wav");
@@ -78,14 +74,12 @@ public class SoundPlayer implements Runnable
 			playerClick.prefetch();
 			playerPopup = Manager.createPlayer(isPopup, "audio/X-wav");
 			playerPopup.prefetch();
-		}
-		catch(MediaException me)
-		{
+		} 
+		catch(MediaException me) {
 			System.out.println("Unknown media exception has occured.");
 			me.printStackTrace();
 		} 
-		catch (IOException ioe) 
-		{
+		catch (IOException ioe) {
 			System.out.println("File not found");
 			ioe.printStackTrace();
 		}	
@@ -96,8 +90,7 @@ public class SoundPlayer implements Runnable
 	 * @version 1.0
 	 * @return <code>true</code> jesli dzwiek jest wyciszony, <code>false</code> w przeciwnym razie
 	 */
-	public boolean getIsMuted()
-	{
+	public boolean getIsMuted() {
 		return isMuted;
 	}
 
@@ -106,13 +99,10 @@ public class SoundPlayer implements Runnable
 	 * @version 1.0
 	 * @param soundID	Kod dzwieku, ktory ma zostac odtworzony
 	 */
-	public void play(int soundID)
-	{
-		try
-		{
+	public void play(int soundID) {
+		try {
 			if(isMuted == false)	// jesli dzwieki nie sa wyciszone
-				switch(soundID)
-				{
+				switch(soundID) {
 					case ERROR_SOUND:
 						playerError.start();
 						break;
@@ -125,9 +115,8 @@ public class SoundPlayer implements Runnable
 					default:
 						break;
 				}
-		}
-		catch(MediaException me)
-		{
+		} 
+		catch(MediaException me) {
 			System.out.println("Unknown media exception has occured.");
 			me.printStackTrace();
 		} 

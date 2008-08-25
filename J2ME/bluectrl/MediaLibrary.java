@@ -17,16 +17,14 @@ import nanoxml.kXMLParseException;
  * @author Kuba Odias
  * @version 0.2
  */
-public class MediaLibrary 
-{
+public class MediaLibrary {
 
 	/**
 	 * Wewnetrzna klasa przechowujaca informacje o utworze wczytanym z playlisty
 	 * @author Kuba Odias
 	 * @version 0.5
 	 */
-	public class Track
-	{
+	public class Track {
 		/** Dlugosc utworu w sekundach */
 		int length;
 		

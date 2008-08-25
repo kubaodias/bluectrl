@@ -1021,7 +1021,6 @@ public class kXMLElement
                               int[]  lineNr)
       throws kXMLParseException
    {
-      String key, value;
       
       for (;;)
          {
@@ -1141,7 +1140,6 @@ public class kXMLElement
             offset++;
          }
       
-      int begin = offset;
       contentOffset[0] = offset;
       int level = 0;
       char[] tag = tagName.toCharArray();
