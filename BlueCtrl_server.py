@@ -16,7 +16,7 @@ class BlueCtrl:
 	"""Class used to manage BlueCtrl server"""
 	
 	playlist_file_name = "playlist.xml"
-	BLUETOOTH_PACKET_SIZE = 32
+	BLUETOOTH_PACKET_SIZE = 64
 
 	def __init__(self):
 		"""Constructor of the BlueCtrl class objects."""
