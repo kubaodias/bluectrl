@@ -1008,6 +1008,7 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener {
 	 */
 	public void getPlaylist() {
 		if (isConnectedToServer == true) {
+			this.getMediaLibrary().setMediaLibraryDownloadedBytes(0);
 			addCommandToProcess(BluetoothPlayer.COMMAND_GET_MEDIA_LIBRARY);
 		}
 	}

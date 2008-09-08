@@ -1,9 +1,7 @@
 package bluectrl;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.Hashtable;
 import java.util.Vector;
 
@@ -86,7 +84,7 @@ public class MediaLibrary {
 	private static final int PREVIOUS_ITEM=1;
 	
 	/** Maximal size of one packet of data with playlist that is send over Bluetooth */
-	private static final int DOWNLOAD_PACKET_SIZE = 32;
+	public static final int DOWNLOAD_PACKET_SIZE = 32;
 
 	/*****************************************************************************/
 
@@ -164,7 +162,7 @@ public class MediaLibrary {
 	
 	/** Metoda parsePlaylist wczytuje plik XML zawierajacy liste utworow a nastepnie parsuje ten plik
 	 * @author Kuba Odias
-	 * @version 0.6
+	 * @version 0.8
 	 */
 	public void parsePlaylist(InputStream in) {
 		byte[] byteArray;
@@ -174,7 +172,6 @@ public class MediaLibrary {
 		mediaLibraryDownloadedBytes = 0;
 		isLibraryDownloadedAndParsed = false;
 		try {
-			
 	        byteArray = new byte[this.mediaLibrarySize + 1];
 	        int bytesRead;
 	        int bytesToRead;
@@ -191,16 +188,11 @@ public class MediaLibrary {
 	        	}
 	        	else
 	        		break;
-	        }
-	       
-       	    ByteArrayInputStream xmlStream = new ByteArrayInputStream(byteArray);
-			InputStreamReader xmlReader = new InputStreamReader(xmlStream);
-			kXMLElement root = new kXMLElement();
+	        }  
 			
-		    root.parseFromReader(xmlReader);
-
-		    xmlReader.close();
-	        
+			kXMLElement root = new kXMLElement();
+		    root.parseByteArray(byteArray, 0, mediaLibrarySize);
+		    
 		    Vector list = root.getChildren();
             
             for( int i = 0; i < list.size(); ++i ){

@@ -338,17 +338,27 @@ public class MainCanvas extends GameCanvas implements Runnable {
 	 * @version 1.0
 	 */
 	public void run() {
+		int loopCount = 0;
+		
 		displayLogo();
 		
+		Runtime.getRuntime().gc();
 		//setFullScreenMode(false);
 		
 		while(true) {		
 			updateState();	// sprawdzenie stanu przyciskow 
 			updateScreen();	// wyswietlenie nowej zawartosci ekranu
 
+			loopCount++;
+			
+			if (loopCount > 200) {
+				Runtime.getRuntime().gc();
+				loopCount = 0;
+			}
+			
 			try {
 				Thread.sleep(50);
-			}
+			}			
 			catch(InterruptedException e) {
 				soundPlayer.play(SoundPlayer.ERROR_SOUND);
 				System.out.println("Praca watku przerysowujacego zawartosc ekranu zostala przerwana!");
