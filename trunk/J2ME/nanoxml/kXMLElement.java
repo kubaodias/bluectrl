@@ -676,7 +676,7 @@ public class kXMLElement
    /**
     * Checks whether a character may be part of an identifier.
     */
-   private boolean isIdentifierChar(char ch)
+   private boolean isIdentifierChar(byte ch)
    {
       return (((ch >= 'A') && (ch <= 'Z')) || ((ch >= 'a') && (ch <= 'z'))
                || ((ch >= '0') && (ch <= '9')) || (".-_:".indexOf(ch) >= 0));
@@ -728,17 +728,22 @@ public class kXMLElement
                }
             
             
-            int charsRead = reader.read(input, size, blockSize);
+            int bytesRead = reader.read(input, size, blockSize);
             
-            if (charsRead < 0)
+            if (bytesRead < 0)
                {
                   break;
                }
 
-            size += charsRead;
+            size += bytesRead;
          }
+      
+      byte[] byteInput = new byte[input.length + 1];
+      
+      for (int i = 0; i < input.length; i++)
+    	  byteInput[i] = (byte)input[i];
 
-      parseCharArray(input, 0, size, startingLineNr);
+      parseByteArray(byteInput, 0, size, startingLineNr);
    }
  
  
@@ -751,7 +756,7 @@ public class kXMLElement
    public void parseString(String string)
       throws kXMLParseException
    {
-      parseCharArray(string.toCharArray(), 0, string.length(), 1);
+      parseByteArray(string.getBytes(), 0, string.length(), 1);
    }
    
    
@@ -767,7 +772,7 @@ public class kXMLElement
                           int    offset)
       throws kXMLParseException
    {
-      return parseCharArray(string.toCharArray(), offset,
+      return parseByteArray(string.getBytes(), offset,
                                  string.length(), 1);
    }
    
@@ -785,7 +790,7 @@ public class kXMLElement
                           int    end)
       throws kXMLParseException
    {
-      return parseCharArray(string.toCharArray(), offset, end, 1);
+      return parseByteArray(string.getBytes(), offset, end, 1);
    }
    
    
@@ -803,7 +808,7 @@ public class kXMLElement
                           int    startingLineNr)
       throws kXMLParseException
    {
-      return parseCharArray(string.toCharArray(), offset, end,
+      return parseByteArray(string.getBytes(), offset, end,
                                  startingLineNr);
    }
    
@@ -816,12 +821,12 @@ public class kXMLElement
     * @exception nanoxml.kXMLParseException
     *    if an error occured while parsing the array
     */
-   public int parseCharArray(char[] input,
+   public int parseByteArray(byte[] input,
                              int    offset,
                              int    end)
       throws kXMLParseException
    {
-      return parseCharArray(input, offset, end, 1);
+      return parseByteArray(input, offset, end, 1);
    }
    
    
@@ -833,7 +838,7 @@ public class kXMLElement
     * @exception nanoxml.kXMLParseException
     *    if an error occured while parsing the array
     */
-   public int parseCharArray(char[] input,
+   public int parseByteArray(byte[] input,
                              int    offset,
                              int    end,
                              int    startingLineNr)
@@ -841,7 +846,7 @@ public class kXMLElement
    {
       int[] lineNr = new int[1];
       lineNr[0] = startingLineNr;
-      return parseCharArray(input, offset, end, lineNr);
+      return parseByteArray(input, offset, end, lineNr);
    }
    
    
@@ -853,7 +858,7 @@ public class kXMLElement
     * @exception nanoxml.kXMLParseException
     *    if an error occured while parsing the array
     */
-   private int parseCharArray(char[] input,
+   private int parseByteArray(byte[] input,
                               int    offset,
                               int    end,
                               int[]  currentLineNr)
@@ -922,7 +927,7 @@ public class kXMLElement
     * @exception nanoxml.kXMLParseException
     *    if an error occured while parsing the array
     */
-   private void processContents(char[] input,
+   private void processContents(byte[] input,
                                 int    contentOffset,
                                 int    contentSize,
                                 int    contentLineNr)
@@ -943,7 +948,7 @@ public class kXMLElement
       
       for (int i = contentOffset; i < end; i++)
          {
-            char ch = input[i];
+            byte ch = input[i];
             
             // The end of the contents is always a < character, so there's
             // no danger for bounds violation
@@ -1015,7 +1020,7 @@ public class kXMLElement
     * @exception nanoxml.kXMLParseException
     *    if an error occured while parsing the array
     */
-   private int scanAttributes(char[] input,
+   private int scanAttributes(byte[] input,
                               int    offset,
                               int    end,
                               int[]  lineNr)
@@ -1026,7 +1031,7 @@ public class kXMLElement
          {
             offset = skipWhitespace(input, offset, end, lineNr);
             
-            char ch = input[offset];
+            byte ch = input[offset];
          
             if ((ch == '/') || (ch == '>'))
                {
@@ -1044,12 +1049,12 @@ public class kXMLElement
     * Searches the content for child objects. If such objects exist, the
     * content is reduced to <CODE>null</CODE>.
     *
-    * @see nanoxml.kXMLElement#parseCharArray
+    * @see nanoxml.kXMLElement#parseByteArray
     *
     * @exception nanoxml.kXMLParseException
     *    if an error occured while parsing the array
     */
-   protected void scanChildren(char[] input,
+   protected void scanChildren(byte[] input,
                                int    contentOffset,
                                int    contentSize,
                                int    contentLineNr)
@@ -1078,7 +1083,7 @@ public class kXMLElement
                }
 
             kXMLElement child = createAnotherElement();
-            offset = child.parseCharArray(input, offset, end, lineNr);
+            offset = child.parseByteArray(input, offset, end, lineNr);
             getChildren().addElement(child);
          }
    }
@@ -1106,7 +1111,7 @@ public class kXMLElement
     * @exception nanoxml.kXMLParseException
     *    if an error occured while parsing the array
     */
-   private int scanContent(char[] input,
+   private int scanContent(byte[] input,
                            int    offset,
                            int    end,
                            int[]  contentOffset,
@@ -1142,7 +1147,7 @@ public class kXMLElement
       
       contentOffset[0] = offset;
       int level = 0;
-      char[] tag = tagName.toCharArray();
+      byte[] tag = tagName.getBytes();
       end -= (tag.length + 2);
 
       while ((offset < end) && (level >= 0))
@@ -1275,7 +1280,7 @@ public class kXMLElement
     * @return the identifier, or <CODE>null</CODE> if offset doesn't point
     *         to an identifier
     */
-   private String scanIdentifier(char[] input,
+   private String scanIdentifier(byte[] input,
                                  int    offset,
                                  int    end)
    {
@@ -1305,7 +1310,7 @@ public class kXMLElement
     * @exception nanoxml.kXMLParseException
     *    if an error occured while parsing the array
     */
-   private int scanOneAttribute(char[] input,
+   private int scanOneAttribute(byte[] input,
                                 int    offset,
                                 int    end,
                                 int[]  lineNr)
@@ -1364,13 +1369,13 @@ public class kXMLElement
     * @exception nanoxml.kXMLParseException
     *    if an error occured while parsing the array
     */
-   private String scanString(char[] input,
+   private String scanString(byte[] input,
                              int    offset,
                              int    end,
                              int[]  lineNr)
       throws kXMLParseException
    {
-      char delim = input[offset];
+      byte delim = input[offset];
       
       if ((delim == '"') || (delim == '\''))
          {
@@ -1420,7 +1425,7 @@ public class kXMLElement
     * @exception nanoxml.kXMLParseException
     *    if an error occured while parsing the array
     */
-   private int scanTagName(char[] input,
+   private int scanTagName(byte[] input,
                            int    offset,
                            int    end,
                            int[]  lineNr)
@@ -1468,7 +1473,7 @@ public class kXMLElement
     * @exception nanoxml.kXMLParseException
     *    if an error occured while parsing the array
     */
-   protected int skipBogusTag(char[] input,
+   protected int skipBogusTag(byte[] input,
                               int    offset,
                               int    end,
                               int[]  lineNr)
@@ -1477,7 +1482,7 @@ public class kXMLElement
       
       while (offset < end)
          {
-            char ch = input[offset++];
+            byte ch = input[offset++];
             
             switch (ch)
                {
@@ -1524,13 +1529,13 @@ public class kXMLElement
     * @exception nanoxml.kXMLParseException
     *    if an error occured while parsing the array
     */
-   private int skipPreamble(char[] input,
+   private int skipPreamble(byte[] input,
                             int    offset,
                             int    end,
                             int[]  lineNr)
       throws kXMLParseException
    {
-      char ch;
+      byte ch;
 
       do
          {
@@ -1568,7 +1573,7 @@ public class kXMLElement
     * @exception nanoxml.kXMLParseException
     *    if an error occured while parsing the array
     */
-   private int skipWhitespace(char[] input,
+   private int skipWhitespace(byte[] input,
                               int    offset,
                               int    end,
                               int[]  lineNr)
