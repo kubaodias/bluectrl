@@ -8,7 +8,7 @@ import java.util.TimerTask;
 /**
  * Klasa odpowiedzialna za odswiezanie czasu trwania utworu oraz sprawdzanie timeoutu w przypadku rozlaczenia urzadzen
  * @author Kuba Odias
- * @version 0.9
+ * @version 1.0
  */
 public class BluetoothTimer extends TimerTask {
 	/** Zmienna przechowujaca aktualny czas trwania utworu */
@@ -18,24 +18,18 @@ public class BluetoothTimer extends TimerTask {
 	private Timer timer = null;	
 
 	/** Konstruktor klasy BluetoothTimer
-	 * @author Kuba Odias
-	 * @version 0.9
 	 */
 	public BluetoothTimer() {
 		currentTime = -1;
 	}
 	
 	/** Metoda uruchamiana przez watek TimerTaska, odpowiedzialna za okresowe wykonywanie danych czynnosci
-	 * @author Kuba Odias
-	 * @version 0.2
 	 */
 	public void run() {
 		currentTime += 1;
 	}
 	
 	/** Akcesor zmiennej currentTime
-	 * @author Kuba Odias
-	 * @version 1.0
 	 * @return 	Wartosc zmiennej currentTime
 	 */
 	public int getCurrentTime() {
@@ -43,8 +37,6 @@ public class BluetoothTimer extends TimerTask {
 	}
 	
 	/** Metoda ustawia wartosc zmiennej currentTime
-	 * @author Kuba Odias
-	 * @version 1.0
 	 * @param t 	Nowa wartosc zmiennej currentTime
 	 */
 	public void setCurrentTime(int t) {
@@ -52,8 +44,6 @@ public class BluetoothTimer extends TimerTask {
 	}
 	
 	/** Metoda zwraca wartosc czasu trwania utworu w postaci tekstowej
-	 * @author Kuba Odias
-	 * @version 1.0
 	 * @return 	Wartosc czasu trwania utworu skonwertowany do stringa ze zmiennej currentTime
 	 */
 	public String getCurrentTimeString() {
@@ -73,8 +63,6 @@ public class BluetoothTimer extends TimerTask {
 	}
 	
 	/** Metoda sluzaca do wlaczenia timera
-	 * @author Kuba Odias
-	 * @version 1.0
 	 */
 	public void startTimer() {
 		if(timer != null)
@@ -85,8 +73,6 @@ public class BluetoothTimer extends TimerTask {
 	}
 	
 	/** Metoda sluzaca do zapauzowania timera
-	 * @author Kuba Odias
-	 * @version 1.0
 	 */
 	public void pauseTimer() {
 		try {
@@ -99,8 +85,6 @@ public class BluetoothTimer extends TimerTask {
 	}
 
 	/** Metoda sluzaca do zatrzymania timera
-	 * @author Kuba Odias
-	 * @version 1.0
 	 */
 	public void stopTimer() {
 		try {
@@ -114,8 +98,6 @@ public class BluetoothTimer extends TimerTask {
 	}
 	
 	/** Metoda sprawdzajaca czy zegar jest uruchomiony
-	 * @author Kuba Odias
-	 * @version 1.0
 	 * @return	<code>true</code> jesli zegar jest uruchomiony, <code>false</code> w przeciwnym razie
 	 */
 	public boolean isRunning() {

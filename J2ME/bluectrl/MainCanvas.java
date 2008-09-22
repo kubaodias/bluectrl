@@ -14,7 +14,7 @@ import javax.microedition.m3g.World;
 /**
  * Obsluga ekranu midletu
  * @author Kuba Odias
- * @version 0.2
+ * @version 1.0
  */
 public class MainCanvas extends GameCanvas implements Runnable {
 	/********************************VARIABLES************************************/
@@ -153,8 +153,6 @@ public class MainCanvas extends GameCanvas implements Runnable {
 	/*******************************METHODS***************************************/
 	
 	/** Konstruktor obiektu klasy MainCanvas 
-	 * @author Kuba Odias
-	 * @version 1.0
 	 * @throws IOException
 	 */
     public MainCanvas() throws IOException {
@@ -180,8 +178,6 @@ public class MainCanvas extends GameCanvas implements Runnable {
     }
 
     /** Metoda ustawiajaca wartosc zmiennej displayedScreen
-     * @author Kuba Odias
-	 * @version 1.0
      * @param d		Nowa wartosc zmiennej displayedScreen
      */
     public void setDisplayedScreen(int d) {
@@ -189,8 +185,6 @@ public class MainCanvas extends GameCanvas implements Runnable {
     }
     
     /** Metoda pobierajaca wartosc zmiennej displayedScreen
-     * @author 	Kuba Odias
-	 * @version 1.0
      * @return	Wartosc zmiennej displayedScreen
      */
     public int getDisplayedScreen() {
@@ -198,8 +192,6 @@ public class MainCanvas extends GameCanvas implements Runnable {
     }
     
     /** Metoda pobierajaca referencje do obiektu klasy BluetoothPlayer
-     * @author 	Kuba Odias
-	 * @version 	1.0
      * @return		Referencja do obiektu klasy BluetoothPlayer
      */
     public BluetoothPlayer getBluetoothPlayer() {
@@ -207,9 +199,7 @@ public class MainCanvas extends GameCanvas implements Runnable {
     }
     
     /** Metoda odpowiedzialna za wyswietlenie i animacje trojwymiarowego logo 
-     * @author Kuba Odias
-	 * @version 1.0
-	 */
+     */
     public void displayLogo() {
     	try {
 	    	int keys;
@@ -281,9 +271,7 @@ public class MainCanvas extends GameCanvas implements Runnable {
     
     
     /** Metoda wczytujaca obrazki z zasobow i tworzaca tlo oraz ikony 
-     * @author Kuba Odias
-	 * @version 0.7
-	 * @throws IOException
+     * @throws IOException
 	 */
     public void loadResources() throws IOException {
     	int i, j;
@@ -325,18 +313,14 @@ public class MainCanvas extends GameCanvas implements Runnable {
     }
     
     /** Metoda odpowiedzialna za czyszczenie pozostalosci po aplikacji 
-     * @author Kuba Odias
-	 * @version 0.1
-	 */
+     */
     public void destroy() {
     	bluetoothPlayer.closeConnection();
     	scene = null;
     }
     
     /** Metoda uruchamiana przez watek, odpowiedzialna za przerysowywanie ekranu 
-     * @author Kuba Odias
-	 * @version 1.0
-	 */
+     */
 	public void run() {
 		int loopCount = 0;
 		
@@ -368,8 +352,6 @@ public class MainCanvas extends GameCanvas implements Runnable {
 	}
 	
 	/** Metoda sprawdzajaca stan klawiszy i aktualizujaca zmienne odpowiedzialne za stan gry 
-	 * @author Kuba Odias
-	 * @version 0.6
 	 */
 	public void updateState()	{
 		int keys = getKeyStates();
@@ -558,8 +540,6 @@ public class MainCanvas extends GameCanvas implements Runnable {
 	
 	
 	/** Metoda odpowiedzialna za przerysowanie ekranu 
-	 * @author Kuba Odias
-	 * @version 0.4
 	 */
 	public void updateScreen() {
 		Graphics g = getGraphics();
@@ -658,8 +638,6 @@ public class MainCanvas extends GameCanvas implements Runnable {
 	}
 	
 	/** Metoda wyswietlajaca pasek postepu nad przyciskami 
-	 * @author 			Kuba Odias
-	 * @version 		0.9
 	 * @param g			Referencja do obiektu klasy Graphics, ktory pozwala na narysowanie pasku postepu
 	 * @param current	Aktualny czas trwania piosenki, 0 <= progress <= max
 	 * @param max		Calkowity czas trwania piosenki
@@ -694,8 +672,6 @@ public class MainCanvas extends GameCanvas implements Runnable {
 	}
 	
 	/** Metoda wyswietlajaca okreg obrazujacy postep wykrywania urzadzen 
-	 * @author 			Kuba Odias
-	 * @version 		1.0
 	 * @param g			Referencja do obiektu klasy Graphics, ktory pozwala na narysowanie pasku postepu
 	 * @param progress	Liczba z zakresu 0 - 359: zakres luku
 	 */
@@ -713,8 +689,6 @@ public class MainCanvas extends GameCanvas implements Runnable {
 	}
 	
 	/** Metoda sluzaca do wypisania tekstu na ekranie w podanej linii
-	 * @author 		Kuba Odias
-	 * @version 	0.7
 	 * @param g		Referencja do obiektu klasy Graphics, ktory pozwala na wyswietlenie tekstu
 	 * @param text	Tekst, ktory ma zostac wypisany
 	 * @param line	Numer linii, w ktorej ma zostac wypisany tekst
@@ -815,16 +789,12 @@ public class MainCanvas extends GameCanvas implements Runnable {
 	}	
 	
 	/** Metoda sluzaca do ponownego polaczenia sie z serwerem
-	 * @author 			Kuba Odias
-	 * @version 		0.5
 	 */
 	public void reconnectToServer() {
 		bluetoothPlayer.closeConnection();		// wystarczy sie rozlaczyc, reszta zostanie wykonana w metodzie run klasy BluetoothPlayer
 	}
 	
 	/** Metoda wyswietlajaca biblioteke muzyczna na wyswietlaczu
-	 * @author 						Kuba Odias
-	 * @version 						0.2
 	 * @param g						Referencja do obiektu klasy Graphics, ktory pozwala na wyswietlenie tekstu
 	 * @param player					Referencja do obiektu klasy odtwarzacza muzycznego
 	 * @param screenSelectedItemIndex	Indeks wybranego elementu na wyswietlaczu
