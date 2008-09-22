@@ -44,16 +44,12 @@ public class BlueCtrl extends MIDlet implements CommandListener {
 	/*******************************METHODS***************************************/
 	
 	/** Konstruktor obiektu klasy BlueCtrl 
-	 * @author Kuba Odias
-	 * @version 1.0
 	 */
 	public BlueCtrl() {
 		myDisplay = Display.getDisplay(this);
 	}
 	
 	/** Metoda destroyApp z cyklu zycia MIDletu - wywolywana przy zamykaniu aplikacji
-	 * @author Kuba Odias
-	 * @version 1.0
 	 * @throws MIDletStateChangeException
 	 */
 	protected void destroyApp(boolean arg0) throws MIDletStateChangeException {
@@ -61,16 +57,12 @@ public class BlueCtrl extends MIDlet implements CommandListener {
 	}
 
 	/** Metoda pauseApp z cyklu zycia MIDletu - wywolywana np. przy polaczeniach przychodzacych
-	 * @author Kuba Odias
-	 * @version 1.0
 	 */
 	protected void pauseApp() {
 		mainCanvas.destroy();
 	}
 
 	/** Metoda startApp z cyklu zycia MIDletu - wywolywana przy zamykaniu aplikacji
-	 * @author Kuba Odias
-	 * @version 1.0
 	 * @throws MIDletStateChangeException
 	 */
 	protected void startApp() throws MIDletStateChangeException {
@@ -100,8 +92,6 @@ public class BlueCtrl extends MIDlet implements CommandListener {
 	}
 	
 	/** Metoda wywolywana przez CommandListener w momencie nacisniecia ktoregos z przyciskow
-	 * @author Kuba Odias
-	 * @version 1.0
 	 */
 	public void commandAction(Command cmd, Displayable arg1) {
 		if (cmd == exitCommand) {
@@ -140,8 +130,6 @@ public class BlueCtrl extends MIDlet implements CommandListener {
 	}
 	
 	/** Metoda usuwa wszystkie komendy przypisane do plotna
-	 * @author Kuba Odias
-	 * @version 1.0
 	 * @param c		Plotno, z ktorego zostana usuniete wszystkie elementy
 	 */
 	public void removeAllCommands(GameCanvas c) {

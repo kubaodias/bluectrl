@@ -50,9 +50,6 @@ public class SoundPlayer implements Runnable {
 	/*******************************METHODS***************************************/
 	
 	/** Konstruktor klasy AudioPlayer
-	 * @author Kuba Odias
-	 * @version 1.0
-	 * @param fileID	Kod dzwieku, ktory ma zostac odtworzony
 	 */
 	public SoundPlayer() {		
 		isMuted = true;
@@ -60,8 +57,6 @@ public class SoundPlayer implements Runnable {
 	}
 
 	/** Metoda uruchamiana przez watek, odpowiedzialna za zaladowanie i wstepne pobranie dzwiekow
-	 * @author Kuba Odias
-	 * @version 1.0
 	 */
 	public void run() {
 		try {
@@ -86,8 +81,6 @@ public class SoundPlayer implements Runnable {
 	}
 	
 	/** Akcesor zmiennej isMuted
-	 * @author Kuba Odias
-	 * @version 1.0
 	 * @return <code>true</code> jesli dzwiek jest wyciszony, <code>false</code> w przeciwnym razie
 	 */
 	public boolean getIsMuted() {
@@ -95,8 +88,6 @@ public class SoundPlayer implements Runnable {
 	}
 
 	/** Metoda odtwarzajaca podany dzwiek
-	 * @author Kuba Odias
-	 * @version 1.0
 	 * @param soundID	Kod dzwieku, ktory ma zostac odtworzony
 	 */
 	public void play(int soundID) {

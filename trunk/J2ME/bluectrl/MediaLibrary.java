@@ -13,14 +13,12 @@ import nanoxml.kXMLParseException;
 /**
  * Klasa odpowiedzialna za zaladowanie biblioteki muzycznej
  * @author Kuba Odias
- * @version 0.2
+ * @version 0.8
  */
 public class MediaLibrary {
 
 	/**
 	 * Wewnetrzna klasa przechowujaca informacje o utworze wczytanym z playlisty
-	 * @author Kuba Odias
-	 * @version 0.5
 	 */
 	public class Track {
 		/** Dlugosc utworu w sekundach */
@@ -37,8 +35,6 @@ public class MediaLibrary {
 		
 		
 		/** Konstruktor obiektu klasy Track
-		 * @author Kuba Odias
-		 * @version 1.0
 		 * @param l	Czas trwania utworu w sekundach
 		 * @param t	Tytul utworu
 		 * @param art	Nazwa artysty
@@ -92,8 +88,6 @@ public class MediaLibrary {
 	/*******************************METHODS***************************************/
 	
 	/** Konstruktor obiektu klasy MediaLibrary
-	 * @author Kuba Odias
-	 * @version 1.0
 	 */
 	public MediaLibrary() {
 		//xmlParser = null;
@@ -103,8 +97,6 @@ public class MediaLibrary {
 	}
 	
 	/** Akcesor zmiennej mediaLibrarySelectedItem
-	 * @author Kuba Odias
-	 * @version 1.0
 	 * @return Wartosc zmiennej mediaLibrarySelectedItem
 	 */
 	public int getMediaLibrarySelectedItem() {
@@ -113,8 +105,6 @@ public class MediaLibrary {
 	
 	
 	/** Metoda zwraca ilosc bajtow, ktora zostala przetworzona przez parser XML, w przyblizeniu ilosc bajtow pobrana przez Bluetooth
-	 * @author		Kuba Odias
-	 * @version	1.0
 	 * @return		Ilosc bajtow przetworzona przez parser XML
 	 */
 	public int getMediaLibraryDownloadedBytes() {
@@ -125,8 +115,6 @@ public class MediaLibrary {
 	}
 	
 	/** Akcesor zmiennej mediaLibrarySize
-	 * @author		Kuba Odias
-	 * @version	1.0
 	 * @return		Wartosc zmiennej mediaLibrarySizes
 	 */
 	public int getMediaLibrarySize() {
@@ -134,8 +122,6 @@ public class MediaLibrary {
 	}
 	
 	/** Akcesor zmiennej libraryDownloadedAndParsed
-	 * @author		Kuba Odias
-	 * @version	1.0
 	 * @return		Wartosc zmiennej libraryDownloadedAndParsed
 	 */
 	public boolean getLibraryDownloadedAndParsed() {
@@ -143,8 +129,6 @@ public class MediaLibrary {
 	}
 	
 	/** Metoda ustawia wartosc zmiennej mediaLibraryDownloadedBytes
-	 * @author		Kuba Odias
-	 * @version	1.0
 	 * @param size	 Nowa wartosc zmiennej mediaLibraryDownloadedBytes
 	 */
 	public void setMediaLibraryDownloadedBytes(int size) {
@@ -152,17 +136,14 @@ public class MediaLibrary {
 	}
 	
 	/** Metoda ustawia wartosc zmiennej mediaLibrarySize
-	 * @author		Kuba Odias
-	 * @version	1.0
 	 * @param size	 Nowa wartosc zmiennej mediaLibrarySize
 	 */
 	public void setMediaLibrarySize(int size) {
 		mediaLibrarySize = size;
 	}
 	
-	/** Metoda parsePlaylist wczytuje plik XML zawierajacy liste utworow a nastepnie parsuje ten plik
-	 * @author Kuba Odias
-	 * @version 0.8
+	/** parsePlaylist method reads an XML file containing info about music tracks, then parses this file 
+	 * @param in 	Input stream used to read music playlist
 	 */
 	public void parsePlaylist(InputStream in) {
 		byte[] byteArray;
@@ -255,8 +236,6 @@ public class MediaLibrary {
 	}	
 	
 	/** Metoda wybierajaca nowy element w bibliotece muzycznej
-	 * @author 		Kuba Odias
-	 * @version 		1.0
 	 * @param item		NEXT_ITEM, lub PREVIOUS_ITEM
 	 * @return 		<code>true</code> jesli zmiana elementu powiodla sie, <code>false</code> w przeciwnym razie
 	 */
@@ -278,8 +257,6 @@ public class MediaLibrary {
 	}
 	
 	/** Metoda zwraca nazwe i wykonawce szukanego utworu
-	 * @author 		Kuba Odias
-	 * @version 		1.0
 	 * @param index	Indeks szukanego utworu na liscie
 	 * @return 		Nazwa utworu i wykonawcy
 	 */

@@ -22,7 +22,7 @@ import javax.microedition.io.StreamConnection;
 /**
  * Klasa przechowujaca informacje o odtwarzaczu muzycznym
  * @author Kuba Odias
- * @version 0.7
+ * @version 0.8
  */
 public class BluetoothPlayer implements Runnable, DiscoveryListener {
 	/*******************************VARIABLES*************************************/
@@ -158,8 +158,6 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener {
 	/*******************************METHODS***************************************/
 	
 	/** Konstruktor klasy Player 
-	 * @author Kuba Odias
-	 * @version 1.0
 	 */
 	public BluetoothPlayer() {
 		bluetoothError = false;
@@ -174,18 +172,14 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener {
 		new Thread(this).start();
 	}
 	
-	/** Akcesor zmiennej isConnectedToServer
-	 * @author Kuba Odias
-	 * @version 1.0 
-	 * @return
+	/** Accessor of isConnectedToServer variable
+	 * @return Value of isConnectedToServer variable
 	 */
 	public boolean getIsConnectedToServer() {
 		return isConnectedToServer;
 	}
 	
-	/** Akcesor zmiennej remoteDeviceBluetoothAddress 
-	 * @author Kuba Odias
-	 * @version 1.0 
+	/** Akcesor zmiennej remoteDeviceBluetoothAddress  
 	 * @return	Adres urzadzenia z ktorym sie laczymy
 	 */
 	public String getRemoteDeviceBluetoothAddress() {
@@ -193,8 +187,6 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener {
 	}
 	
 	/** Akcesor zmiennej remoteDeviceFriendlyName
-	 * @author Kuba Odias
-	 * @version 1.0 
 	 * @return	Nazwa urzadzenia z ktorym sie laczymy
 	 */
 	public String getRemoteDeviceFriendlyName() {
@@ -202,8 +194,6 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener {
 	}
 	
 	/** Akcesor zmiennej remoteDeviceBluetoothAddress 
-	 * @author Kuba Odias
-	 * @version 1.0 
 	 * @return	Adres urzadzenia za pomoca ktorego sie laczymy (Bluetooth w telefonie)
 	 */
 	public String getLocalDeviceBluetoothAddress() {
@@ -211,8 +201,6 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener {
 	}
 	
 	/** Akcesor zmiennej remoteDeviceFriendlyName
-	 * @author Kuba Odias
-	 * @version 1.0 
 	 * @return	Nazwa urzadzenia za pomoca ktorego sie laczymy (Bluetooth w telefonie)
 	 */
 	public String getLocalDeviceFriendlyName() {
@@ -220,8 +208,6 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener {
 	}
 	
 	/** Akcesor zmiennej bluetoothError
-	 * @author Kuba Odias
-	 * @version 1.0  
 	 * @return	Wartosc zmiennej informujacej czy wystapil blad spowodowany przez Bluetooth
 	 */
 	public boolean getBluetoothError() {
@@ -229,17 +215,12 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener {
 	}
 	
 	/** Ustawia wartosc zmiennej bluetoothError
-	 * @author Kuba Odias
-	 * @version 1.0  
-	 * @return	Nowa wartosc zmiennej informujacej czy wystapil blad spowodowany przez Bluetooth
 	 */
 	public void setBluetoothError(boolean b) {
 		bluetoothError = b;
 	}
 	
 	/** Akcesor zmiennej inquiryStarted 
-	 * @author Kuba Odias
-	 * @version 1.0
 	 * @return	Zmienna informujaca czy odpytywanie urzadzen zostalo juz zakonczone 
 	 */
 	public boolean getInquiryStarted() {
@@ -247,8 +228,6 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener {
 	}
 	
 	/** Akcesor zmiennej title
-	 * @author Kuba Odias
-	 * @version 1.0
 	 * @return	Wartosc zmiennej przechowujacej tytul odtwarzanego utworu 
 	 */
 	public String getTitle() {
@@ -256,8 +235,6 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener {
 	}
 	
 	/** Akcesor zmiennej artist
-	 * @author Kuba Odias
-	 * @version 1.0
 	 * @return	Wartosc zmiennej przechowujacej nazwe artysty, ktorego utwor jest w danej chwili odtwarzany
 	 */
 	public String getArtist() {
@@ -265,8 +242,6 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener {
 	}
 	
 	/** Akcesor zmiennej totalTime
-	 * @author Kuba Odias
-	 * @version 1.0
 	 * @return	Wartosc zmiennej przechowujacej calkowity czas trwania utworu
 	 */
 	public int getTotalTime() {
@@ -274,8 +249,6 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener {
 	}
 	
 	/** Akcesor zmiennej currentTime z klasy BluetoothTimer
-	 * @author Kuba Odias
-	 * @version 1.0
 	 * @return	Wartosc zmiennej przechowujacej aktualny czas trwania utworu
 	 */
 	public int getCurrentTime() {
@@ -283,8 +256,6 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener {
 	}
 	
 	/** Akcesor zmiennej currentTimeString
-	 * @author Kuba Odias
-	 * @version 1.0
 	 * @return	Wartosc zmiennej przechowujacej aktualny czas trwania utworu
 	 */
 	public String getCurrentTimeString() {
@@ -292,8 +263,6 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener {
 	}
 	
 	/** Akcesor zmiennej volumeLevel
-	 * @author Kuba Odias
-	 * @version 1.0
 	 * @return	Wartosc zmiennej przechowujacej glosnosc dzwieku
 	 */
 	public int getVolumeLevel() {
@@ -301,8 +270,6 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener {
 	}
 	
 	/** Akcesor zmiennej playingState
-	 * @author Kuba Odias
-	 * @version 1.0
 	 * @return	Wartosc zmiennej przechowujacej stan odtwarzacza
 	 */
 	public String getPlayingState() {
@@ -313,8 +280,6 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener {
 	}
 	
 	/** Akcesor zmiennej stateChanged
-	 * @author Kuba Odias
-	 * @version 1.0
 	 * @return	Wartosc zmiennej informujacej o zmianie stanu odtwarzacza
 	 */
 	public boolean getStateChanged() {
@@ -325,8 +290,6 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener {
 	}
 	
 	/** Akcesor zmiennej bluetoothTimer
-	 * @author		Kuba Odias
-	 * @version	1.0
 	 * @return		Wartosc zmiennej bluetoothTimer
 	 */
 	public BluetoothTimer getBluetoothTimer() {
@@ -334,8 +297,6 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener {
 	}
 	
 	/** Akcesor zmiennej mediaLibrary
-	 * @author		Kuba Odias
-	 * @version	1.0
 	 * @return		Wartosc zmiennej mediaLibrary
 	 */
 	public MediaLibrary getMediaLibrary() {
@@ -343,8 +304,6 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener {
 	}
 	
 	/** Akcesor zmiennej mediaLibraryDownloadedBytes
-	 * @author		Kuba Odias
-	 * @version	1.0
 	 * @return		Wartosc zmiennej mediaLibraryDownloadedBytes
 	 */
 	public int getMediaLibraryDownloadedBytes() {
@@ -352,8 +311,6 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener {
 	}
 	
 	/** Akcesor zmiennej mediaLibrarySize
-	 * @author		Kuba Odias
-	 * @version	1.0
 	 * @return		Wartosc zmiennej mediaLibrarySizes
 	 */
 	public int getMediaLibrarySize() {
@@ -361,17 +318,13 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener {
 	}
 
 	/** Metoda dodaje nowa komende do wektora
-	 * @author Kuba Odias
-	 * @version 1.0
-	 * @param	Identyfikator nowej komendy
+	 * @param	cmd		Identyfikator nowej komendy
 	 */
 	public void addCommandToProcess(String cmd) {
 		commandVector.addElement(cmd);
 	}
 	
 	/** Metoda uruchamiana przez watek, odpowiedzialna za zainicjalizowanie polaczenia z komputerem
-	 * @author Kuba Odias
-	 * @version 0.7
 	 */
 	public void run() {	
 		try { 
@@ -426,8 +379,6 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener {
 	}
 
 	/** Metoda sprawdzajaca czy Bluetooth jest wlaczony
-	 * @author 			Kuba Odias
-	 * @version 		1.0
 	 * @return	<code>true</code> jesli Bluetooth jest wlaczony, <code>false</code> w przeciwnym razie
 	 */
 	public boolean isBluetoothOn() {
@@ -451,8 +402,6 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener {
 	}
 
 	/** Metoda odpowiedzialna za wyszukanie i nawiazanie polaczenia z serwerem
-	 * @author Kuba Odias
-	 * @version 0.8
 	 */
 	public void findBlueCtrlServer() {
 		try {				
@@ -478,8 +427,6 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener {
 	}
 	
 	/** Metoda zamykajaca polaczenie z urzadzeniem Bluetooth 
-	 * @author Kuba Odias
-	 * @version 0.7
 	 */
 	public void closeConnection() {
 		isConnectedToServer = false;
@@ -514,8 +461,6 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener {
 	}
 
 	/** Metoda wywolywana przez DiscoveryListener w momencie znalezienia nowego urzadzenia
-	 * @author Kuba Odias
-	 * @version 0.9
 	 * @param remoteDevice	Znalezione urzadzenie
 	 * @param deviceClass	Klasa znalezionego urzadzenia
 	 */
@@ -524,8 +469,6 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener {
 	}
 
 	/** Metoda wywolywana przez DiscoveryListener w momencie gdy zakonczone zostalo wyszukiwanie nowych urzadzen
-	 * @author Kuba Odias
-	 * @version 0.9
 	 * @param type		Typ zadania, ktore zostalo wykonane: INQUIRY_COMPLETED, INQUIRY_TERMINATED lub INQUIRY_ERROR     
 	 */
 	public void inquiryCompleted(int type) {
@@ -562,8 +505,6 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener {
 	}
 
 	/** Metoda wymagana przez interfejs DiscoveryListener
-	 * @author Kuba Odias
-	 * @version 1.0
 	 * @param transID		Identyfikator wyszukiwania serwisow
 	 * @param responseCode	Kod zwrocony przez DiscoveryListener
 	 */
@@ -581,8 +522,6 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener {
 	}
 
 	/** Metoda wymagana przez interfejs DiscoveryListener - wywoływana w momencie znalezienia nowych serwisów
-	 * @author Kuba Odias
-	 * @version 1.0
 	 * @param transID	Identyfikator wyszukiwania serwisow
 	 * @param sr		Tablica zawierajaca znalezione serwisy
 	 */
@@ -626,8 +565,6 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener {
 }
 	
 	/** Funkcja sluzaca do wyslania danych przez lacze Bluetooth
-	 * @author Kuba Odias
-	 * @version 0.8
 	 * @param data	Dane, ktore maja zostac wyslane
 	 * @return		<code>true</code> jesli wyslanie danych powiodlo sie, <code>false</code> w przeciwnym razie
 	 */
@@ -662,8 +599,6 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener {
 	}
 	
 	/** Funkcja sluzaca do wyslania potwierdzenia odbioru danych
-	 * @author Kuba Odias
-	 * @version 1.0
 	 * @param data	Potwierdzenie, ktore ma zostac wyslane
 	 * @return		<code>true</code> jesli wyslanie danych powiodlo sie, <code>false</code> w przeciwnym razie
 	 */
@@ -690,8 +625,6 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener {
 	}
 	
 	/** Funkcja sluzaca do odebrania danych przez lacze Bluetooth
-	 * @author Kuba Odias
-	 * @version 0.8
 	 * @return	Odebrane dane, lub null w razie bledu 
 	 */
 	public String bluetoothReceiveData() {
@@ -742,8 +675,6 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener {
 	
 	
 	/** Funkcja sluzaca do odebrania potwierdzenia przeslania danych przez lacze Bluetooth
-	 * @author Kuba Odias
-	 * @version 0.8
 	 * @return	Odebrane potwierdzenie, lub null w razie bledu 
 	 */
 	public String bluetoothReceiveAcknowledge() {
@@ -787,8 +718,6 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener {
 	
 	
 	/** Metoda sluzaca do sprawdzenia czy mozliwe jest polaczenie i autoryzowanie danego serwera BlueCtrl
-	 * @author 	Kuba Odias
-	 * @version 	0.4
 	 * @param 		urlString Link URL, z ktory sluzy do polaczenia dwoch urzadzen
 	 * @return 	<code>true</code> jesli autoryzacja powiodla sie, <code>false</code> w przeciwnym razie
 	 */
@@ -828,8 +757,6 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener {
 	
 	
 	/** Metoda sluzaca do wykonania czynnosci zgloszonych przez uzytkownika telefonu
-	 * @author Kuba Odias
-	 * @version 0.9
 	 */
 	public void sendCommands() {
 		while (!commandVector.isEmpty()) {
@@ -856,8 +783,6 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener {
 	}
 	
 	/** Metoda sluzaca do odebrania od komputera ewentualnie wystepujacych danych
-	 * @author Kuba Odias
-	 * @version 0.7
 	 */
 	public void receiveCommands() {
 		String msg = null;
@@ -873,40 +798,30 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener {
 	}
 	
 	/** Metoda sluzaca do rozpoczecia odtwarzania utworu
-	 * @author Kuba Odias
-	 * @version 0.9
 	 */
 	public void play() {
 		addCommandToProcess(BluetoothPlayer.COMMAND_PLAY);
 	}
 	
 	/** Metoda sluzaca do zapauzowania utworu
-	 * @author Kuba Odias
-	 * @version 0.9
 	 */
 	public void pause() {
 		addCommandToProcess(BluetoothPlayer.COMMAND_PAUSE);
 	}
 	
 	/** Metoda sluzaca do zatrzymania utworu
-	 * @author Kuba Odias
-	 * @version 0.9
 	 */
 	public void stop() {
 		addCommandToProcess(BluetoothPlayer.COMMAND_STOP);
 	}
 	
 	/** Metoda sluzaca do zwiekszenia glosnosci utworu
-	 * @author Kuba Odias
-	 * @version 1.0
 	 */
 	public void volumeUp() {
 		addCommandToProcess(BluetoothPlayer.COMMAND_VOLUME_UP);
 	}
 	
 	/** Metoda sluzaca do zwiekszenia glosnosci utworu
-	 * @author Kuba Odias
-	 * @version 1.0
 	 */
 	public void volumeDown() {
 		addCommandToProcess(BluetoothPlayer.COMMAND_VOLUME_DOWN);
@@ -914,8 +829,6 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener {
 	
 	
 	/** Metoda sluzaca do wykonania czynnosci zwiazanych z otrzymana komenda
-	 * @author Kuba Odias
-	 * @version 0.5
 	 * @param msg	Otrzymana wiadomosc
 	 */
 	public void processReceivedCommand(String msg) {
@@ -1003,8 +916,6 @@ public class BluetoothPlayer implements Runnable, DiscoveryListener {
 	}
 	
 	/** Metoda wywolujaca metode parsePlaylist z klasy MediaLibrary z dodatkowym argumentem - strumieniem z ktorego bedzie czytany plik
-	 * @author Kuba Odias
-	 * @version 0.6
 	 */
 	public void getPlaylist() {
 		if (isConnectedToServer == true) {
